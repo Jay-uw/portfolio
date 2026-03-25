@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Jose Angel P. | Front-End Developer & IT Systems Specialist</title>
+<title>Jay Freelancer Services | Front-End Developer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════
-   VARIABLES
+   CSS VARIABLES — DARK (NIGHT) defaults
 ═══════════════════════════════════════════ */
 :root {
   --bg:       #060c1a;
@@ -24,14 +24,22 @@
   --glow:     rgba(74,158,255,0.35);
   --card-shadow: 0 8px 32px rgba(0,0,0,0.45);
   --tr: 0.55s cubic-bezier(.4,0,.2,1);
-  /* neon */
-  --np: #ff2d78;
-  --nb: #00d4ff;
-  --ny: #ffe135;
+  /* city scene palette (night) */
+  --sb:   #0d1828;
+  --sb2:  #0a1220;
+  --sw:   #ffc84a;
+  --sw2:  #cc9022;
+  --sg:   #040c12;
+  --str:  #071a08;
+  --stt:  #0a2510;
+  --slp:  rgba(255,160,40,0.75);
+  --slp2: rgba(255,200,100,0.9);
 }
+
+/* LIGHT (DAY) overrides */
 [data-theme="light"] {
-  --bg:       #f2f6ff;
-  --bg2:      #e6eeff;
+  --bg:       #c8dff8;
+  --bg2:      #b8d5f2;
   --surface:  #ffffff;
   --surface2: #f0f5ff;
   --accent:   #1a6fd4;
@@ -42,6 +50,15 @@
   --border:   rgba(26,111,212,0.18);
   --glow:     rgba(26,111,212,0.2);
   --card-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  --sb:   #b8a890;
+  --sb2:  #cabb9a;
+  --sw:   #85c3e0;
+  --sw2:  #a8d5ea;
+  --sg:   #4a7a3a;
+  --str:  #6b4c2a;
+  --stt:  #3a8028;
+  --slp:  rgba(0,0,0,0);
+  --slp2: rgba(0,0,0,0);
 }
 
 /* ═══════════════════════════════════════════
@@ -54,7 +71,7 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  transition: background var(--tr), color var(--tr);
+  transition: background 1.4s ease, color var(--tr);
   overflow-x: hidden;
 }
 img { max-width:100%; display:block; }
@@ -70,10 +87,61 @@ button { cursor:pointer; font-family:inherit; border:none; background:none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  transition: opacity 1.2s ease;
+  transition: opacity 1.4s ease;
   opacity: 1;
 }
 [data-theme="light"] #sky-canvas { opacity: 0; }
+
+/* ═══════════════════════════════════════════
+   CITY / ENVIRONMENT SCENE BACKGROUND
+   Visible in BOTH day and night with different styling
+═══════════════════════════════════════════ */
+.scene-bg {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 310px;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.scene-bg svg { width:100%; height:100%; display:block; }
+
+.sb  { fill: var(--sb);  transition: fill 1.4s ease; }
+.sb2 { fill: var(--sb2); transition: fill 1.4s ease; }
+.sg  { fill: var(--sg);  transition: fill 1.4s ease; }
+
+.win-w {
+  fill: var(--sw);
+  transition: fill 1.4s ease, opacity 1.4s ease;
+}
+.win-d {
+  fill: var(--sw2);
+  transition: fill 1.4s ease, opacity 1.4s ease;
+}
+.win-off {
+  fill: var(--sb);
+  opacity: 0.5;
+  transition: fill 1.4s ease, opacity 1.4s ease;
+}
+[data-theme="light"] .win-off { fill: var(--sb2); opacity: 0.8; }
+
+.tree-top  { fill: var(--stt); transition: fill 1.4s ease; }
+.tree-body { fill: var(--str); transition: fill 1.4s ease; }
+
+.lamp-glow { fill: var(--slp);  transition: fill 1.4s ease; }
+.lamp-top  { fill: var(--slp2); transition: fill 1.4s ease; }
+.lamp-pole { fill: #2a3a4a; transition: fill 1.4s ease; }
+[data-theme="light"] .lamp-pole { fill: #8a8a8a; }
+
+[data-theme="dark"] .win-w,
+[data-theme="dark"] .win-d {
+  filter: drop-shadow(0 0 3px rgba(255,190,60,0.7));
+}
+[data-theme="light"] .win-w,
+[data-theme="light"] .win-d { filter: none; }
+[data-theme="dark"] .lamp-glow {
+  filter: drop-shadow(0 0 8px rgba(255,160,40,0.8));
+}
 
 /* ═══════════════════════════════════════════
    NAVBAR
@@ -88,29 +156,25 @@ nav {
   gap: 1rem;
   padding: 0 5%;
   height: 64px;
-  background: rgba(6,12,26,0.78);
+  background: rgba(6,12,26,0.82);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
   transition: background var(--tr), border-color var(--tr);
 }
-[data-theme="light"] nav { background: rgba(242,246,255,0.88); }
+[data-theme="light"] nav { background: rgba(200,223,248,0.9); }
 
 .nav-logo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.45rem;
-  letter-spacing: .22em;
+  font-size: 1.3rem;
+  letter-spacing: .18em;
   color: var(--accent2);
   white-space: nowrap;
   flex-shrink: 0;
 }
 [data-theme="light"] .nav-logo { color: var(--accent); }
 
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
+.nav-links { display:flex; gap:2rem; align-items:center; }
 .nav-links a {
   font-size: .82rem;
   font-weight: 500;
@@ -121,12 +185,7 @@ nav {
 }
 .nav-links a:hover { color: var(--accent2); }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: .8rem;
-  flex-shrink: 0;
-}
+.nav-right { display:flex; align-items:center; gap:.8rem; flex-shrink:0; }
 
 /* Mode toggle pill */
 .mode-pill {
@@ -141,7 +200,7 @@ nav {
   user-select: none;
 }
 .mode-pill:hover { border-color: var(--accent2); }
-.mode-icon { font-size: 1rem; line-height:1; }
+.mode-icon  { font-size:1rem; line-height:1; }
 .mode-label {
   font-size: .75rem;
   font-weight: 600;
@@ -151,7 +210,7 @@ nav {
   white-space: nowrap;
 }
 .mode-switch {
-  width: 38px; height: 20px;
+  width:38px; height:20px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 50px;
@@ -161,14 +220,14 @@ nav {
 }
 [data-theme="light"] .mode-switch { background: var(--accent2); }
 .mode-thumb {
-  width: 14px; height: 14px;
-  border-radius: 50%;
+  width:14px; height:14px;
+  border-radius:50%;
   background: var(--accent2);
   position: absolute;
-  top: 2px; left: 2px;
+  top:2px; left:2px;
   transition: transform .4s cubic-bezier(.4,0,.2,1), background .4s;
 }
-[data-theme="light"] .mode-thumb { transform: translateX(18px); background: #fff; }
+[data-theme="light"] .mode-thumb { transform:translateX(18px); background:#fff; }
 
 .nav-cta {
   background: linear-gradient(135deg, var(--accent), var(--accent3));
@@ -182,31 +241,24 @@ nav {
   transition: opacity .3s, transform .3s;
   box-shadow: 0 3px 14px rgba(74,158,255,.3);
 }
-.nav-cta:hover { opacity:.85; transform: translateY(-2px); }
+.nav-cta:hover { opacity:.85; transform:translateY(-2px); }
 
 /* Hamburger */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  padding: 4px;
-}
+.hamburger { display:none; flex-direction:column; gap:5px; padding:4px; }
 .hamburger span {
-  display: block;
-  width: 22px; height: 2px;
-  background: var(--text);
-  border-radius: 2px;
+  display:block; width:22px; height:2px;
+  background: var(--text); border-radius:2px;
   transition: var(--tr);
 }
-.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 
 /* Mobile menu */
 .mobile-menu {
   display: none;
   position: fixed;
-  top: 64px; left: 0; right: 0;
+  top:64px; left:0; right:0;
   background: rgba(6,12,26,0.97);
   backdrop-filter: blur(20px);
   z-index: 999;
@@ -215,916 +267,1226 @@ nav {
   flex-direction: column;
   gap: 1.2rem;
 }
-[data-theme="light"] .mobile-menu { background: rgba(242,246,255,.97); }
-.mobile-menu.open { display: flex; }
+[data-theme="light"] .mobile-menu { background: rgba(200,223,248,.97); }
+.mobile-menu.open { display:flex; }
 .mobile-menu a {
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--text);
-  padding: .5rem 0;
-  border-bottom: 1px solid var(--border);
+  font-size:1.05rem; font-weight:500;
+  color:var(--text); padding:.5rem 0;
+  border-bottom:1px solid var(--border);
 }
-.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:last-child { border-bottom:none; }
 
 /* ═══════════════════════════════════════════
-   CELESTIAL ELEMENTS (night only)
+   MOON & SUN
 ═══════════════════════════════════════════ */
-.night-only {
-  transition: opacity .9s ease;
-  pointer-events: none;
-}
-[data-theme="light"] .night-only { opacity: 0 !important; }
-
-/* Moon */
 .moon {
   position: fixed;
-  top: 90px; right: 8%;
-  width: 58px; height: 58px;
-  border-radius: 50%;
+  top:88px; right:8%;
+  width:56px; height:56px;
+  border-radius:50%;
   background: radial-gradient(circle at 38% 38%, #fffcee, #f0d06a);
   box-shadow: 0 0 28px rgba(240,208,106,.55), 0 0 56px rgba(240,208,106,.22);
-  z-index: 2;
+  z-index: 3;
   opacity: 1;
+  pointer-events: none;
+  transition: opacity 1.4s ease;
 }
 .moon::before {
   content:''; position:absolute;
-  width:10px; height:10px; border-radius:50%;
+  width:9px; height:9px; border-radius:50%;
   background:rgba(190,160,60,.35);
-  top:16px; left:20px;
+  top:14px; left:18px;
 }
 .moon::after {
   content:''; position:absolute;
-  width:7px; height:7px; border-radius:50%;
+  width:6px; height:6px; border-radius:50%;
   background:rgba(190,160,60,.28);
-  top:28px; left:32px;
+  top:26px; left:30px;
 }
+[data-theme="light"] .moon { opacity:0; }
 
-/* Sun (day only) */
 .sun {
   position: fixed;
-  top: 90px; right: 8%;
-  width: 58px; height: 58px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff8a0, #ffcc00);
-  box-shadow: 0 0 40px rgba(255,204,0,.6), 0 0 80px rgba(255,204,0,.25);
-  z-index: 2;
+  top:88px; right:8%;
+  width:56px; height:56px;
+  border-radius:50%;
+  background: radial-gradient(circle, #fff5a0, #ffcc00 50%, #ff9900);
+  box-shadow: 0 0 40px rgba(255,204,0,.7), 0 0 90px rgba(255,204,0,.3), 0 0 160px rgba(255,180,0,.15);
+  z-index: 3;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .9s ease;
+  transition: opacity 1.4s ease;
+  animation: sun-pulse 4s ease-in-out infinite;
 }
-[data-theme="light"] .sun { opacity: 1; }
+@keyframes sun-pulse {
+  0%,100% { box-shadow:0 0 40px rgba(255,204,0,.7),0 0 90px rgba(255,204,0,.3); }
+  50%      { box-shadow:0 0 55px rgba(255,204,0,.9),0 0 120px rgba(255,204,0,.4); }
+}
+[data-theme="light"] .sun { opacity:1; }
 
-/* UFO */
+/* ═══════════════════════════════════════════
+   UFO — hidden on load, enters after first shooting star
+═══════════════════════════════════════════ */
 .ufo-wrap {
   position: fixed;
-  top: 130px; left: 7%;
-  z-index: 2;
-  animation: ufo-drift 7s ease-in-out infinite;
+  top: 142px;
+  left: 8%;
+  z-index: 500; /* above hero section z-index:10 — passes IN FRONT of title */
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+/* UFO hidden in day mode */
+[data-theme="light"] .ufo-wrap { opacity: 0 !important; animation: none !important; }
+
+/* Entrance: starts tiny far top-right, sweeps across and grows */
+.ufo-wrap.ufo-entering {
+  animation: ufo-enter 5.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ufo-enter {
+  0%   { opacity:0; transform:translate(58vw,-60px) scale(0.03); filter:blur(6px); }
+  6%   { opacity:0.8; filter:blur(1px); }
+  35%  { transform:translate(28vw,55px) scale(0.38); opacity:1; filter:blur(0); }
+  68%  { transform:translate(8vw,22px) scale(0.82); }
+  100% { transform:translate(0,0) scale(1); opacity:1; filter:blur(0); }
+}
+
+/* After entrance: gentle drift */
+.ufo-wrap.ufo-drifting {
   opacity: 1;
+  animation: ufo-drift 8s ease-in-out infinite;
 }
 @keyframes ufo-drift {
-  0%,100% { transform: translateY(0) rotate(-3deg); }
-  50%      { transform: translateY(-22px) rotate(3deg); }
+  0%,100% { transform:translateY(0px) rotate(-2deg); }
+  25%      { transform:translateY(-10px) translateX(8px) rotate(1deg); }
+  50%      { transform:translateY(-18px) rotate(3deg); }
+  75%      { transform:translateY(-8px) translateX(-6px) rotate(-1deg); }
 }
+
+/* UFO body */
 .ufo-body {
-  width: 72px; height: 28px;
-  background: linear-gradient(135deg, #4a9eff, #00d4ff, #7c5cff);
+  width:80px; height:30px;
+  background: linear-gradient(160deg, #5ab0ff, #00d4ff 40%, #6a4cff);
   border-radius: 50%;
   position: relative;
-  box-shadow: 0 0 22px rgba(74,158,255,.6);
+  box-shadow:
+    0 0 18px rgba(74,158,255,.7),
+    0 0 38px rgba(74,158,255,.35),
+    0 2px 0 rgba(255,255,255,.25) inset;
 }
+
+/* Glass dome with alien */
 .ufo-dome {
-  width: 36px; height: 20px;
-  background: rgba(200,235,255,.25);
-  border: 1px solid rgba(200,235,255,.45);
+  width:42px; height:28px;
+  background: rgba(150,220,255,0.18);
+  border: 1.5px solid rgba(200,240,255,0.5);
   border-radius: 50% 50% 0 0;
   position: absolute;
-  top: -17px; left: 50%;
+  top:-25px; left:50%;
   transform: translateX(-50%);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
-.ufo-beam {
-  width: 0; height: 0;
-  border-left: 22px solid transparent;
-  border-right: 22px solid transparent;
-  border-top: 55px solid rgba(100,210,255,.1);
-  position: absolute;
-  bottom: -55px; left: 50%;
-  transform: translateX(-50%);
-  animation: beam 2s ease-in-out infinite;
-}
-@keyframes beam { 0%,100%{opacity:1} 50%{opacity:.3} }
+.alien-svg { width:34px; height:28px; flex-shrink:0; }
+
+/* UFO belly lights */
 .ufo-lights {
-  display:flex; justify-content:space-around;
-  position:absolute; bottom:4px; left:8px; right:8px;
+  display:flex; justify-content:space-around; align-items:center;
+  position:absolute; bottom:4px; left:10px; right:10px;
 }
 .ufo-light {
-  width:6px; height:6px; border-radius:50%;
-  animation: blink 1.3s ease-in-out infinite;
+  width:7px; height:7px; border-radius:50%;
+  animation: blink 1.4s ease-in-out infinite;
 }
-.ufo-light:nth-child(1){background:#ff4488;animation-delay:0s}
-.ufo-light:nth-child(2){background:#44ffaa;animation-delay:.45s}
-.ufo-light:nth-child(3){background:#4499ff;animation-delay:.9s}
-@keyframes blink { 0%,100%{opacity:1;box-shadow:0 0 5px currentColor} 50%{opacity:.2;box-shadow:none} }
+.ufo-light:nth-child(1){ background:#ff4488; animation-delay:0s; }
+.ufo-light:nth-child(2){ background:#44ffaa; animation-delay:.5s; }
+.ufo-light:nth-child(3){ background:#4499ff; animation-delay:1s; }
+@keyframes blink {
+  0%,100%{ opacity:1; box-shadow:0 0 6px currentColor; }
+  50%    { opacity:.15; box-shadow:none; }
+}
 
-/* Tree silhouette */
-.trees-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 200px;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity .9s ease;
+/* Tractor beam */
+.ufo-beam {
+  width:0; height:0;
+  border-left:26px solid transparent;
+  border-right:26px solid transparent;
+  border-top:65px solid rgba(80,200,255,.12);
+  position:absolute;
+  bottom:-66px; left:50%;
+  transform:translateX(-50%);
+  animation: beam-pulse 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(80,200,255,.3));
 }
-[data-theme="light"] .trees-bar { opacity: 0; }
-.trees-bar svg { width:100%; height:100%; }
+@keyframes beam-pulse {
+  0%,100%{ opacity:1; border-top-color:rgba(80,200,255,.14); }
+  50%    { opacity:.35; border-top-color:rgba(80,200,255,.05); }
+}
 
 /* ═══════════════════════════════════════════
    LAYOUT HELPERS
 ═══════════════════════════════════════════ */
-.container { max-width: 1120px; margin: 0 auto; padding: 0 5%; }
-section { position: relative; z-index: 10; padding: 6rem 0; }
-section.alt { background: var(--bg2); }
+.container { max-width:1120px; margin:0 auto; padding:0 5%; }
+section { position:relative; z-index:10; padding:6rem 0; }
+section.alt { background:var(--bg2); }
 
 .section-label {
-  display: inline-block;
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  margin-bottom: .65rem;
+  display:inline-block;
+  font-size:.72rem; font-weight:700;
+  letter-spacing:.28em; text-transform:uppercase;
+  color:var(--accent2); margin-bottom:.65rem;
 }
-[data-theme="light"] .section-label { color: var(--accent); }
+[data-theme="light"] .section-label { color:var(--accent); }
 .section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  letter-spacing: .03em;
-  line-height: 1.05;
-  margin-bottom: 1rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.2rem,5vw,3.6rem);
+  letter-spacing:.03em; line-height:1.05; margin-bottom:1rem;
 }
 .section-line {
-  width: 46px; height: 3px;
-  background: linear-gradient(to right, var(--accent), var(--accent3));
-  border-radius: 3px;
-  margin-bottom: 2.2rem;
+  width:46px; height:3px;
+  background:linear-gradient(to right,var(--accent),var(--accent3));
+  border-radius:3px; margin-bottom:2.2rem;
 }
-.section-sub {
-  font-size: 1rem;
-  color: var(--muted);
-  max-width: 580px;
-  line-height: 1.75;
-}
+.section-sub { font-size:1rem; color:var(--muted); max-width:580px; line-height:1.75; }
 
 /* ═══════════════════════════════════════════
    HERO
 ═══════════════════════════════════════════ */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 100px 0 240px;
+  min-height:100vh;
+  display:flex; align-items:center;
+  padding:100px 0 280px;
 }
 .hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 4rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center; gap:4rem;
 }
 .hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  padding: .28rem .9rem;
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  background: rgba(74,158,255,.06);
-  margin-bottom: 1.4rem;
+  display:inline-flex; align-items:center; gap:.5rem;
+  border:1px solid var(--border); border-radius:50px;
+  padding:.28rem .9rem;
+  font-size:.72rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--accent2); background:rgba(74,158,255,.06); margin-bottom:1.4rem;
 }
-[data-theme="light"] .hero-badge { color: var(--accent); }
+[data-theme="light"] .hero-badge { color:var(--accent); }
 .badge-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #44ff88;
-  box-shadow: 0 0 6px #44ff88;
-  animation: pulse-dot 2s ease-in-out infinite;
+  width:7px; height:7px; border-radius:50%;
+  background:#44ff88; box-shadow:0 0 6px #44ff88;
+  animation:pulse-dot 2s ease-in-out infinite;
 }
-@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+@keyframes pulse-dot {
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%    { opacity:.5; transform:scale(.7); }
+}
 
+/* ── HERO H1 ── */
 .hero h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  line-height: .95;
-  letter-spacing: .02em;
-  margin-bottom: 1.4rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,7vw,5.5rem);
+  line-height:.95; letter-spacing:.02em; margin-bottom:1.4rem;
 }
+
+/* ── NEON NAME — dark mode: blue neon, light mode: gradient ── */
 .hero h1 .name {
-  display: block;
-  background: linear-gradient(135deg, var(--accent2), var(--accent3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  display:block;
+  background:linear-gradient(135deg,var(--accent2),var(--accent3));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
 }
+
+/* DARK ONLY: override to solid blue neon */
+[data-theme="dark"] .hero h1 .name {
+  background:none;
+  -webkit-background-clip:initial;
+  background-clip:initial;
+  -webkit-text-fill-color:#00d4ff;
+  color:#00d4ff;
+}
+
+/* Individual letter spans for flicker (added by JS in dark mode) */
+[data-theme="dark"] .nl {
+  display:inline;
+  color:#00d4ff;
+  -webkit-text-fill-color:#00d4ff;
+  text-shadow:
+    0 0 4px rgba(255,255,255,.9),
+    0 0 10px rgba(0,212,255,.95),
+    0 0 22px rgba(0,212,255,.8),
+    0 0 44px rgba(0,212,255,.6),
+    0 0 88px rgba(0,212,255,.35);
+  animation:letter-dim var(--dur,8s) infinite;
+  animation-delay:var(--delay,0s);
+}
+[data-theme="dark"] .nl-space {
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Faulty neon tube flicker per letter */
+@keyframes letter-dim {
+  0%,78%,100% { opacity:1; }
+  79%   { opacity:0.85; }
+  79.5% { opacity:0.15; text-shadow:none; }
+  80%   { opacity:1; }
+  81%   { opacity:0.7; }
+  81.5% { opacity:0.05; text-shadow:none; }
+  82%   { opacity:1; }
+  83%   { opacity:0.4; }
+  83.3% { opacity:1; }
+  83.8% { opacity:0; text-shadow:none; }
+  84.3% { opacity:0.9; }
+  85%   { opacity:0.2; }
+  85.5% { opacity:1; }
+}
+
+/* Light mode: completely plain */
+[data-theme="light"] .nl {
+  display:inline; color:inherit;
+  -webkit-text-fill-color:inherit;
+  text-shadow:none; animation:none;
+}
+
 .hero-role {
-  font-size: .88rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 1.2rem;
+  font-size:.88rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:1.2rem;
 }
 .hero p {
-  font-size: 1.02rem;
-  color: var(--muted);
-  line-height: 1.78;
-  margin-bottom: 2.2rem;
-  max-width: 480px;
+  font-size:1.02rem; color:var(--muted);
+  line-height:1.78; margin-bottom:2.2rem; max-width:480px;
 }
-.hero-btns {
-  display: flex;
-  gap: .9rem;
-  flex-wrap: wrap;
-}
+.hero-btns { display:flex; gap:.9rem; flex-wrap:wrap; }
 .btn-primary {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  color: #fff;
-  padding: .75rem 1.9rem;
-  border-radius: 8px;
-  font-size: .9rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-  box-shadow: 0 4px 18px rgba(74,158,255,.35);
-  transition: transform .3s, box-shadow .3s, opacity .3s;
+  display:inline-block;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  color:#fff; padding:.75rem 1.9rem; border-radius:8px;
+  font-size:.9rem; font-weight:700; letter-spacing:.04em;
+  box-shadow:0 4px 18px rgba(74,158,255,.35);
+  transition:transform .3s,box-shadow .3s,opacity .3s;
 }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(74,158,255,.5); }
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(74,158,255,.5); }
 .btn-outline {
-  display: inline-block;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: .75rem 1.9rem;
-  border-radius: 8px;
-  font-size: .9rem;
-  font-weight: 600;
-  transition: border-color .3s, background .3s, transform .3s;
+  display:inline-block;
+  border:1px solid var(--border); color:var(--text);
+  padding:.75rem 1.9rem; border-radius:8px;
+  font-size:.9rem; font-weight:600;
+  transition:border-color .3s,background .3s,transform .3s;
 }
-.btn-outline:hover { border-color: var(--accent2); background: rgba(74,158,255,.05); transform: translateY(-3px); }
+.btn-outline:hover { border-color:var(--accent2); background:rgba(74,158,255,.05); transform:translateY(-3px); }
 
-/* Stats row */
-.hero-stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2.4rem;
-  flex-wrap: wrap;
-}
-.hs {
-  display: flex;
-  flex-direction: column;
-  gap: .2rem;
-}
+/* Hero stats */
+.hero-stats { display:flex; gap:2rem; margin-top:2.4rem; flex-wrap:wrap; }
+.hs { display:flex; flex-direction:column; gap:.2rem; }
 .hs-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  letter-spacing: .05em;
-  color: var(--accent2);
-  line-height: 1;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem; letter-spacing:.05em;
+  color:var(--accent2); line-height:1;
 }
-[data-theme="light"] .hs-num { color: var(--accent); }
-.hs-lbl {
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+[data-theme="light"] .hs-num { color:var(--accent); }
+.hs-lbl { font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
 
 /* Hero card */
 .hero-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: var(--card-shadow);
-  position: relative;
-  overflow: hidden;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:2rem;
+  box-shadow:var(--card-shadow); position:relative; overflow:hidden;
 }
 .hero-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 80% 20%, rgba(74,158,255,.08), transparent 60%);
-  pointer-events: none;
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 80% 20%,rgba(74,158,255,.08),transparent 60%);
+  pointer-events:none;
 }
 .hc-top {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:1rem;
+  margin-bottom:1.5rem; padding-bottom:1.5rem;
+  border-bottom:1px solid var(--border);
 }
 .hc-avatar {
-  width: 60px; height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  flex-shrink: 0;
+  width:60px; height:60px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem; flex-shrink:0;
 }
-.hc-name { font-weight: 700; font-size: 1rem; margin-bottom: .2rem; }
-.hc-loc { font-size: .78rem; color: var(--muted); }
+.hc-name  { font-weight:700; font-size:1rem; margin-bottom:.2rem; }
+.hc-loc   { font-size:.78rem; color:var(--muted); }
 .hc-badge {
-  margin-left: auto;
-  background: linear-gradient(135deg, #ffd700, #ffaa00);
-  color: #000;
-  font-size: .65rem;
-  font-weight: 800;
-  letter-spacing: .1em;
-  padding: .25rem .6rem;
-  border-radius: 4px;
-  text-transform: uppercase;
+  margin-left:auto;
+  background:linear-gradient(135deg,#ffd700,#ffaa00);
+  color:#000; font-size:.65rem; font-weight:800;
+  letter-spacing:.1em; padding:.25rem .6rem;
+  border-radius:4px; text-transform:uppercase;
 }
 .hc-metrics {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .9rem;
-  margin-bottom: 1.5rem;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:1rem; margin-bottom:1.4rem;
 }
-.hc-m {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .7rem .9rem;
-}
-.hc-m-val { font-size: .95rem; font-weight: 700; color: var(--text); }
-.hc-m-key { font-size: .7rem; color: var(--muted); letter-spacing: .08em; margin-top: .15rem; }
-.hc-stars {
-  display: flex;
-  align-items: center;
-  gap: .3rem;
-  font-size: .82rem;
-  margin-bottom: 1.2rem;
-}
-.stars { color: #ffd700; letter-spacing: .05em; }
-.hc-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-}
+.hc-m { text-align:center; }
+.hc-m-val { font-weight:700; font-size:1.05rem; margin-bottom:.1rem; }
+.hc-m-key { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+.hc-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:1rem; }
 .tag {
-  background: rgba(74,158,255,.1);
-  border: 1px solid rgba(74,158,255,.2);
-  color: var(--accent2);
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: .06em;
-  padding: .22rem .65rem;
-  border-radius: 4px;
-  text-transform: uppercase;
+  background:rgba(74,158,255,.08);
+  border:1px solid rgba(74,158,255,.2);
+  color:var(--accent2); border-radius:4px;
+  font-size:.7rem; font-weight:600; padding:.18rem .55rem;
 }
-[data-theme="light"] .tag { background: rgba(26,111,212,.08); border-color:rgba(26,111,212,.2); color:var(--accent); }
 
 /* ═══════════════════════════════════════════
    SERVICES
 ═══════════════════════════════════════════ */
 .services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 3rem;
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1.6rem; margin-top:3rem;
 }
 .svc-card {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--surface);
-  padding: 2rem 1.6rem 1.8rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform .3s, box-shadow .3s, border-color .3s;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:18px; padding:2rem; position:relative; overflow:hidden;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
 }
 .svc-card.featured {
-  border-color: rgba(74,158,255,.5);
-  background: linear-gradient(160deg, var(--surface), var(--surface2));
+  border-color:rgba(74,158,255,.5);
+  background:linear-gradient(160deg,var(--surface),var(--surface2));
 }
-.svc-card:hover { transform: translateY(-7px); box-shadow: 0 20px 50px rgba(0,0,0,.35); }
-.svc-card.featured:hover { box-shadow: 0 20px 50px rgba(74,158,255,.2); }
+.svc-card:hover { transform:translateY(-7px); box-shadow:0 20px 50px rgba(0,0,0,.35); }
+.svc-card.featured:hover { box-shadow:0 20px 50px rgba(74,158,255,.2); }
 .svc-badge {
-  display: inline-block;
-  font-size: .65rem;
-  font-weight: 800;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  padding: .2rem .65rem;
-  border-radius: 4px;
-  margin-bottom: 1.2rem;
-  background: rgba(74,158,255,.12);
-  color: var(--accent2);
-  border: 1px solid rgba(74,158,255,.25);
+  display:inline-block; font-size:.65rem; font-weight:800;
+  letter-spacing:.15em; text-transform:uppercase;
+  padding:.2rem .65rem; border-radius:4px; margin-bottom:1.2rem;
+  background:rgba(74,158,255,.12); color:var(--accent2);
+  border:1px solid rgba(74,158,255,.25);
 }
 .svc-card.featured .svc-badge {
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  color: #fff;
-  border: none;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  color:#fff; border:none;
 }
 .svc-price {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 3.2rem;
-  letter-spacing: .04em;
-  line-height: 1;
-  color: var(--text);
-  margin-bottom: .3rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:3.2rem; letter-spacing:.04em;
+  line-height:1; color:var(--text); margin-bottom:.3rem;
 }
-.svc-price sup { font-size: 1.4rem; vertical-align: top; margin-top: .5rem; font-family: 'Inter', sans-serif; font-weight: 700; }
-.svc-tier { font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 1.4rem; }
-.svc-desc {
-  font-size: .9rem;
-  font-weight: 700;
-  margin-bottom: .8rem;
-  color: var(--text);
-}
-.svc-features {
-  list-style: none;
-  margin-bottom: 1.8rem;
-}
+.svc-price sup { font-size:1.4rem; vertical-align:top; margin-top:.5rem; font-family:'Inter',sans-serif; font-weight:700; }
+.svc-tier { font-size:.82rem; font-weight:600; color:var(--muted); margin-bottom:1.4rem; }
+.svc-desc { font-size:.9rem; font-weight:700; margin-bottom:.8rem; color:var(--text); }
+.svc-features { list-style:none; margin-bottom:1.8rem; }
 .svc-features li {
-  font-size: .84rem;
-  color: var(--muted);
-  padding: .4rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: .55rem;
+  font-size:.84rem; color:var(--muted);
+  padding:.4rem 0; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:.55rem;
 }
-.svc-features li:last-child { border-bottom: none; }
-.svc-features li::before {
-  content: '✓';
-  color: var(--accent2);
-  font-weight: 800;
-  font-size: .8rem;
-  flex-shrink: 0;
-}
+.svc-features li:last-child { border-bottom:none; }
+.svc-features li::before { content:'✓'; color:var(--accent2); font-weight:800; font-size:.8rem; flex-shrink:0; }
 .svc-cta {
-  display: block;
-  text-align: center;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: .7rem;
-  font-size: .85rem;
-  font-weight: 700;
-  color: var(--text);
-  transition: background .3s, border-color .3s, transform .3s;
+  display:block; text-align:center;
+  border:1px solid var(--border); border-radius:8px;
+  padding:.7rem; font-size:.85rem; font-weight:700; color:var(--text);
+  transition:background .3s,border-color .3s,transform .3s;
 }
-.svc-cta:hover { background: rgba(74,158,255,.1); border-color: var(--accent2); transform: translateY(-2px); }
+.svc-cta:hover { background:rgba(74,158,255,.1); border-color:var(--accent2); transform:translateY(-2px); }
 .svc-card.featured .svc-cta {
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  border: none;
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(74,158,255,.35);
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  border:none; color:#fff;
+  box-shadow:0 4px 16px rgba(74,158,255,.35);
 }
 .svc-card.featured .svc-cta:hover { opacity:.88; }
 
 /* ═══════════════════════════════════════════
-   WHAT I DO  (skills)
+   SKILLS
 ═══════════════════════════════════════════ */
 .what-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-  margin-top: 3rem;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:4rem; align-items:start; margin-top:3rem;
 }
-.skill-list { display: flex; flex-direction: column; gap: 1rem; }
+.skill-list { display:flex; flex-direction:column; gap:1rem; }
 .skill-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.2rem 1.4rem;
-  transition: transform .3s, border-color .3s;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:1.2rem 1.4rem;
+  transition:transform .3s,border-color .3s;
 }
-.skill-item:hover { transform: translateX(6px); border-color: rgba(74,158,255,.35); }
-.skill-head {
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  margin-bottom: .4rem;
-}
-.skill-icon { font-size: 1.3rem; }
-.skill-name { font-size: .92rem; font-weight: 700; }
-.skill-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; }
-
-/* Tech pills */
-.tech-cloud { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 2rem; }
+.skill-item:hover { transform:translateX(6px); border-color:rgba(74,158,255,.35); }
+.skill-head { display:flex; align-items:center; gap:.7rem; margin-bottom:.4rem; }
+.skill-icon { font-size:1.3rem; }
+.skill-name { font-size:.92rem; font-weight:700; }
+.skill-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
+.tech-cloud { display:flex; flex-wrap:wrap; gap:.55rem; margin-top:2rem; }
 .tech-pill {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  padding: .35rem 1rem;
-  font-size: .78rem;
-  font-weight: 600;
-  color: var(--muted);
-  transition: color .3s, border-color .3s, background .3s;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:50px; padding:.35rem 1rem;
+  font-size:.78rem; font-weight:600; color:var(--muted);
+  transition:color .3s,border-color .3s,background .3s;
 }
-.tech-pill:hover { color: var(--accent2); border-color: rgba(74,158,255,.4); background: rgba(74,158,255,.05); }
-
-/* Certifications */
-.cert-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+.tech-pill:hover { color:var(--accent2); border-color:rgba(74,158,255,.4); background:rgba(74,158,255,.05); }
+.cert-list { display:flex; flex-direction:column; gap:1rem; margin-top:2rem; }
 .cert-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.1rem 1.3rem;
+  display:flex; align-items:center; gap:1rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:1.1rem 1.3rem;
 }
-.cert-icon { font-size: 1.8rem; flex-shrink: 0; }
-.cert-name { font-size: .88rem; font-weight: 700; margin-bottom: .15rem; }
-.cert-issuer { font-size: .75rem; color: var(--muted); }
+.cert-icon  { font-size:1.8rem; flex-shrink:0; }
+.cert-name  { font-size:.88rem; font-weight:700; margin-bottom:.15rem; }
+.cert-issuer { font-size:.75rem; color:var(--muted); }
 .cert-badge {
-  margin-left: auto;
-  background: rgba(74,158,255,.1);
-  border: 1px solid rgba(74,158,255,.25);
-  color: var(--accent2);
-  font-size: .65rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  padding: .2rem .6rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  white-space: nowrap;
+  margin-left:auto;
+  background:rgba(74,158,255,.1);
+  border:1px solid rgba(74,158,255,.25);
+  color:var(--accent2); font-size:.65rem; font-weight:700;
+  letter-spacing:.1em; padding:.2rem .6rem;
+  border-radius:4px; text-transform:uppercase; white-space:nowrap;
 }
 
 /* ═══════════════════════════════════════════
-   EXPERIENCE
+   TIMELINE / EXPERIENCE
 ═══════════════════════════════════════════ */
-.timeline { position: relative; padding-left: 2rem; margin-top: 3rem; }
+.timeline { position:relative; padding-left:2rem; margin-top:3rem; }
 .timeline::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--accent), var(--accent3), transparent);
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom,var(--accent),var(--accent3),transparent);
 }
-.tl-item {
-  position: relative;
-  margin-bottom: 2.4rem;
-}
+.tl-item { position:relative; margin-bottom:2.4rem; }
 .tl-item::before {
-  content: '';
-  position: absolute;
-  left: -2.35rem; top: .3rem;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--accent2);
-  box-shadow: 0 0 8px var(--accent2);
+  content:''; position:absolute;
+  left:-2.35rem; top:.3rem;
+  width:10px; height:10px; border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 8px var(--accent2);
 }
-.tl-period {
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  margin-bottom: .35rem;
-}
-[data-theme="light"] .tl-period { color: var(--accent); }
-.tl-role { font-size: 1.05rem; font-weight: 700; margin-bottom: .2rem; }
-.tl-company { font-size: .85rem; color: var(--muted); margin-bottom: .8rem; }
-.tl-bullets { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+.tl-period { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent2); margin-bottom:.35rem; }
+[data-theme="light"] .tl-period { color:var(--accent); }
+.tl-role    { font-size:1.05rem; font-weight:700; margin-bottom:.2rem; }
+.tl-company { font-size:.85rem; color:var(--muted); margin-bottom:.8rem; }
+.tl-bullets { list-style:none; display:flex; flex-direction:column; gap:.4rem; }
 .tl-bullets li {
-  font-size: .84rem;
-  color: var(--muted);
-  padding-left: 1rem;
-  position: relative;
-  line-height: 1.6;
+  font-size:.84rem; color:var(--muted);
+  padding-left:1rem; position:relative; line-height:1.6;
 }
-.tl-bullets li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--accent2);
-  font-size: .75rem;
-}
+.tl-bullets li::before { content:'→'; position:absolute; left:0; color:var(--accent2); font-size:.75rem; }
 
 /* ═══════════════════════════════════════════
-   TESTIMONIALS
+   REVIEWS
 ═══════════════════════════════════════════ */
 .reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.4rem;
-  margin-top: 3rem;
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1.4rem; margin-top:3rem;
 }
 .review-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.7rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform .3s, box-shadow .3s;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; padding:1.7rem;
+  position:relative; overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
 }
-.review-card:hover { transform: translateY(-5px); box-shadow: var(--card-shadow); }
+.review-card:hover { transform:translateY(-5px); box-shadow:var(--card-shadow); }
 .review-card::before {
-  content: '"';
-  position: absolute;
-  top: -10px; right: 16px;
-  font-size: 6rem;
-  font-family: Georgia, serif;
-  color: var(--border);
-  line-height: 1;
-  pointer-events: none;
+  content:'"'; position:absolute;
+  top:-10px; right:16px;
+  font-size:6rem; font-family:Georgia,serif;
+  color:var(--border); line-height:1; pointer-events:none;
 }
-.review-stars { color: #ffd700; font-size: .9rem; margin-bottom: .9rem; }
-.review-text { font-size: .86rem; color: var(--muted); line-height: 1.72; margin-bottom: 1.3rem; }
+.review-stars  { color:#ffd700; font-size:.9rem; margin-bottom:.9rem; }
+.review-text   { font-size:.86rem; color:var(--muted); line-height:1.72; margin-bottom:1.3rem; }
 .reviewer {
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+  display:flex; align-items:center; gap:.7rem;
+  padding-top:1rem; border-top:1px solid var(--border);
 }
 .rev-avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .8rem;
-  font-weight: 800;
-  color: #fff;
-  flex-shrink: 0;
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:800; color:#fff; flex-shrink:0;
 }
-.rev-name { font-size: .84rem; font-weight: 700; }
-.rev-job { font-size: .73rem; color: var(--muted); }
+.rev-name { font-size:.84rem; font-weight:700; }
+.rev-job  { font-size:.73rem; color:var(--muted); }
 
 /* ═══════════════════════════════════════════
    CONTACT
 ═══════════════════════════════════════════ */
-.contact-box {
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-.contact-box p { color: var(--muted); line-height: 1.78; margin-bottom: 2.4rem; }
-.contact-links {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 2.5rem;
-}
+.contact-box { max-width:680px; margin:0 auto; text-align:center; }
+.contact-box p { color:var(--muted); line-height:1.78; margin-bottom:2.4rem; }
+.contact-links { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2.5rem; }
 .c-link {
-  display: flex;
-  align-items: center;
-  gap: .55rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .7rem 1.3rem;
-  font-size: .85rem;
-  font-weight: 600;
-  transition: border-color .3s, background .3s, transform .3s;
+  display:flex; align-items:center; gap:.55rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:.7rem 1.3rem;
+  font-size:.85rem; font-weight:600;
+  transition:border-color .3s,background .3s,transform .3s;
 }
-.c-link:hover { border-color: var(--accent2); background: rgba(74,158,255,.05); transform: translateY(-3px); }
-.c-icon { font-size: 1.05rem; }
-.response-note {
-  font-size: .78rem;
-  color: var(--muted);
-  margin-top: 1.4rem;
-  letter-spacing: .05em;
-}
-.response-note span { color: var(--accent2); font-weight: 600; }
+.c-link:hover { border-color:var(--accent2); background:rgba(74,158,255,.05); transform:translateY(-3px); }
+.c-icon { font-size:1.05rem; }
+.response-note { font-size:.78rem; color:var(--muted); margin-top:1.4rem; letter-spacing:.05em; }
+.response-note span { color:var(--accent2); font-weight:600; }
 
 /* ═══════════════════════════════════════════
-   FOOTER + NEON SIGN
+   FOOTER
 ═══════════════════════════════════════════ */
 footer {
-  position: relative;
-  z-index: 10;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  padding: 2.5rem 5%;
+  position:relative; z-index:10;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:2.5rem 5%;
 }
 .footer-inner {
-  max-width: 1120px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  max-width:1120px; margin:0 auto;
+  display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap; gap:1rem;
 }
 .footer-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: .2em;
-  color: var(--accent2);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem; letter-spacing:.2em; color:var(--accent2);
 }
-[data-theme="light"] .footer-logo { color: var(--accent); }
-.footer-copy { font-size: .78rem; color: var(--muted); }
-.footer-nav { display: flex; gap: 1.5rem; }
-.footer-nav a { font-size: .78rem; color: var(--muted); transition: color .3s; }
-.footer-nav a:hover { color: var(--accent2); }
+[data-theme="light"] .footer-logo { color:var(--accent); }
+.footer-copy { font-size:.78rem; color:var(--muted); }
+.footer-nav { display:flex; gap:1.5rem; }
+.footer-nav a { font-size:.78rem; color:var(--muted); transition:color .3s; }
+.footer-nav a:hover { color:var(--accent2); }
 
-/* NEON SECTION */
+/* ═══════════════════════════════════════════
+   NEON SIGN SECTION (bottom)
+   Single blue neon color — #00d4ff only
+═══════════════════════════════════════════ */
 .neon-section {
-  position: relative;
-  z-index: 10;
-  background: #000;
-  padding: 4.5rem 5%;
-  text-align: center;
-  overflow: hidden;
+  position:relative; z-index:10;
+  background:#000;
+  padding:4.5rem 5%;
+  text-align:center; overflow:hidden;
 }
 .neon-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content:''; position:absolute; inset:0;
   background:
-    radial-gradient(ellipse at 30% 60%, rgba(255,45,120,.07), transparent 55%),
-    radial-gradient(ellipse at 70% 40%, rgba(0,212,255,.06), transparent 55%);
-  pointer-events: none;
-}
-.neon-frame {
-  display: inline-block;
-  border: 2px solid rgba(255,45,120,.55);
-  border-radius: 18px;
-  padding: 2.2rem 4rem;
-  box-shadow:
-    0 0 12px rgba(255,45,120,.28),
-    0 0 32px rgba(255,45,120,.12),
-    inset 0 0 20px rgba(255,45,120,.04);
-  animation: frame-flicker 5s infinite;
-}
-.neon-sign {
-  font-family: 'Caveat', cursive;
-  font-size: clamp(2.4rem, 7vw, 5rem);
-  font-weight: 700;
-  color: #fff;
-  text-shadow:
-    0 0 5px #fff,
-    0 0 12px #fff,
-    0 0 22px var(--np),
-    0 0 45px var(--np),
-    0 0 88px var(--np);
-  animation: neon-main 5s infinite;
-  display: block;
-  line-height: 1.1;
-}
-.neon-sign .nb {
-  color: var(--nb);
-  text-shadow:
-    0 0 5px #fff,
-    0 0 12px #fff,
-    0 0 22px var(--nb),
-    0 0 45px var(--nb),
-    0 0 88px var(--nb);
-  animation: neon-b 5s infinite;
-}
-.neon-sub-sign {
-  display: block;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1rem, 2.5vw, 1.6rem);
-  letter-spacing: .3em;
-  color: var(--ny);
-  text-shadow:
-    0 0 5px #fff,
-    0 0 10px var(--ny),
-    0 0 28px var(--ny),
-    0 0 55px var(--ny);
-  animation: neon-y 5s infinite;
-  margin-top: .4rem;
-}
-.neon-tagline {
-  margin-top: 1.4rem;
-  font-size: .75rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.22);
+    radial-gradient(ellipse at 30% 50%, rgba(0,212,255,.08),transparent 60%),
+    radial-gradient(ellipse at 70% 50%, rgba(0,180,255,.06),transparent 60%);
+  pointer-events:none;
 }
 
-@keyframes neon-main {
-  0%,84%    { opacity:1 }
-  84.6%     { opacity:.05 }
-  85.2%     { opacity:1 }
-  85.8%     { opacity:.12 }
-  86.3%     { opacity:1 }
-  86.7%     { opacity:0 }
-  87.1%     { opacity:1 }
-  87.5%     { opacity:.3 }
-  87.9%     { opacity:1 }
-  88.3%     { opacity:0 }
-  88.8%     { opacity:.85 }
-  89.3%     { opacity:0 }
-  89.8%     { opacity:1 }
-  90.3%     { opacity:.18 }
-  90.8%     { opacity:1 }
-  91.5%     { opacity:0 }
-  92%       { opacity:1 }
-  100%      { opacity:1 }
+/* Neon frame — single blue border */
+.neon-frame {
+  display:inline-block;
+  border:2px solid rgba(0,212,255,.5);
+  border-radius:18px;
+  padding:2.2rem 4rem;
+  box-shadow:
+    0 0 12px rgba(0,212,255,.25),
+    0 0 32px rgba(0,212,255,.1),
+    inset 0 0 20px rgba(0,212,255,.04);
+  animation:neon-frame-flicker 5s infinite;
 }
-@keyframes neon-b {
-  0%,87%    { opacity:1 }
-  87.5%     { opacity:0 }
-  88%       { opacity:.9 }
-  88.6%     { opacity:.08 }
-  89.2%     { opacity:1 }
-  89.8%     { opacity:0 }
-  90.4%     { opacity:1 }
-  91%       { opacity:.35 }
-  91.5%     { opacity:1 }
-  92%       { opacity:0 }
-  92.5%     { opacity:1 }
-  100%      { opacity:1 }
+
+/* Main sign text — SINGLE BLUE neon, no rainbow */
+.neon-sign {
+  font-family:'Caveat',cursive;
+  font-size:clamp(2.4rem,7vw,5rem);
+  font-weight:700;
+  color:#00d4ff;
+  text-shadow:
+    0 0 4px rgba(255,255,255,.9),
+    0 0 10px rgba(255,255,255,.6),
+    0 0 20px rgba(0,212,255,1),
+    0 0 40px rgba(0,212,255,.85),
+    0 0 80px rgba(0,212,255,.6),
+    0 0 120px rgba(0,212,255,.35);
+  animation:neon-blue-flicker 5s infinite;
+  display:block; line-height:1.15;
 }
-@keyframes neon-y {
-  0%,86%    { opacity:1 }
-  86.4%     { opacity:.1 }
-  86.8%     { opacity:1 }
-  87.3%     { opacity:0 }
-  87.8%     { opacity:.7 }
-  88.3%     { opacity:0 }
-  88.8%     { opacity:1 }
-  100%      { opacity:1 }
+
+/* Sub-line — same blue neon, slightly different animation phase */
+.neon-sub-sign {
+  display:block;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(.95rem,2.2vw,1.5rem);
+  letter-spacing:.35em;
+  color:#00d4ff;
+  text-shadow:
+    0 0 4px rgba(255,255,255,.7),
+    0 0 10px rgba(0,212,255,.9),
+    0 0 28px rgba(0,212,255,.7),
+    0 0 55px rgba(0,212,255,.4);
+  animation:neon-blue-sub 5s infinite;
+  margin-top:.5rem;
 }
-@keyframes frame-flicker {
-  0%,84%    { border-color:rgba(255,45,120,.55); box-shadow:0 0 12px rgba(255,45,120,.28),0 0 32px rgba(255,45,120,.12),inset 0 0 20px rgba(255,45,120,.04) }
-  85%       { border-color:rgba(255,45,120,.08); box-shadow:none }
-  86%       { border-color:rgba(255,45,120,.55); box-shadow:0 0 12px rgba(255,45,120,.28),0 0 32px rgba(255,45,120,.12),inset 0 0 20px rgba(255,45,120,.04) }
-  87.5%     { border-color:rgba(255,45,120,.08); box-shadow:none }
-  89%       { border-color:rgba(255,45,120,.55); box-shadow:0 0 12px rgba(255,45,120,.28),0 0 32px rgba(255,45,120,.12),inset 0 0 20px rgba(255,45,120,.04) }
-  91%       { border-color:rgba(255,45,120,.08); box-shadow:none }
-  92.5%     { border-color:rgba(255,45,120,.55); box-shadow:0 0 12px rgba(255,45,120,.28),0 0 32px rgba(255,45,120,.12),inset 0 0 20px rgba(255,45,120,.04) }
-  100%      { border-color:rgba(255,45,120,.55); box-shadow:0 0 12px rgba(255,45,120,.28),0 0 32px rgba(255,45,120,.12),inset 0 0 20px rgba(255,45,120,.04) }
+
+.neon-tagline {
+  margin-top:1.4rem;
+  font-size:.75rem; letter-spacing:.22em;
+  text-transform:uppercase; color:rgba(255,255,255,.2);
+}
+
+/* Single-color flicker — main text */
+@keyframes neon-blue-flicker {
+  0%,84%    { opacity:1; }
+  84.6%     { opacity:.05; }
+  85.2%     { opacity:1; }
+  85.8%     { opacity:.12; }
+  86.3%     { opacity:1; }
+  86.7%     { opacity:0; }
+  87.1%     { opacity:1; }
+  87.5%     { opacity:.3; }
+  87.9%     { opacity:1; }
+  88.3%     { opacity:0; }
+  88.8%     { opacity:.85; }
+  89.3%     { opacity:0; }
+  89.8%     { opacity:1; }
+  90.3%     { opacity:.18; }
+  90.8%     { opacity:1; }
+  91.5%     { opacity:0; }
+  92%       { opacity:1; }
+  100%      { opacity:1; }
+}
+
+/* Sub-line flicker — slightly offset */
+@keyframes neon-blue-sub {
+  0%,86%    { opacity:1; }
+  86.4%     { opacity:.1; }
+  86.8%     { opacity:1; }
+  87.3%     { opacity:0; }
+  87.8%     { opacity:.7; }
+  88.3%     { opacity:0; }
+  88.8%     { opacity:1; }
+  100%      { opacity:1; }
+}
+
+/* Frame flicker — same blue */
+@keyframes neon-frame-flicker {
+  0%,84%  { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
+  85%     { border-color:rgba(0,212,255,.08); box-shadow:none; }
+  86%     { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
+  87.5%   { border-color:rgba(0,212,255,.08); box-shadow:none; }
+  89%     { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
+  91%     { border-color:rgba(0,212,255,.08); box-shadow:none; }
+  92.5%   { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
+  100%    { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
 }
 
 /* ═══════════════════════════════════════════
-   FADE IN
+   SCROLL REVEAL
 ═══════════════════════════════════════════ */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .65s ease, transform .65s ease;
-}
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .65s ease,transform .65s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
 /* ═══════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  .services-grid { grid-template-columns: 1fr 1fr; }
-  .services-grid .svc-card:last-child { grid-column: 1/-1; max-width: 480px; margin: 0 auto; }
-  .what-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .reviews-grid { grid-template-columns: 1fr 1fr; }
-  .reviews-grid .review-card:last-child { grid-column: 1/-1; max-width: 480px; margin: 0 auto; }
+@media (max-width:1024px) {
+  .services-grid { grid-template-columns:1fr 1fr; }
+  .services-grid .svc-card:last-child { grid-column:1/-1; max-width:480px; margin:0 auto; }
+  .what-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .reviews-grid { grid-template-columns:1fr 1fr; }
+  .reviews-grid .review-card:last-child { grid-column:1/-1; max-width:480px; margin:0 auto; }
 }
-@media (max-width: 860px) {
-  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .hero { padding: 100px 0 200px; }
-  .nav-links, .nav-cta { display: none; }
-  .hamburger { display: flex; }
+@media (max-width:860px) {
+  .hero-inner { grid-template-columns:1fr; gap:3rem; }
+  .hero { padding:100px 0 220px; }
+  .nav-links, .nav-cta { display:none; }
+  .hamburger { display:flex; }
 }
-@media (max-width: 640px) {
-  section { padding: 4rem 0; }
-  .services-grid { grid-template-columns: 1fr; }
-  .services-grid .svc-card:last-child { max-width: 100%; }
-  .reviews-grid { grid-template-columns: 1fr; }
-  .reviews-grid .review-card:last-child { max-width: 100%; }
-  .hero-stats { gap: 1.2rem; }
-  .neon-frame { padding: 1.6rem 1.8rem; }
-  .moon, .sun { width: 42px; height: 42px; right: 5%; }
-  .ufo-wrap { left: 4%; top: 115px; }
-  .ufo-body { width: 54px; height: 22px; }
-  .ufo-dome { width: 28px; height: 16px; top: -14px; }
-  .hc-metrics { grid-template-columns: 1fr 1fr; }
-  .footer-inner { flex-direction: column; text-align: center; align-items: center; }
+@media (max-width:640px) {
+  section { padding:4rem 0; }
+  .services-grid { grid-template-columns:1fr; }
+  .services-grid .svc-card:last-child { max-width:100%; }
+  .reviews-grid { grid-template-columns:1fr; }
+  .reviews-grid .review-card:last-child { max-width:100%; }
+  .neon-frame { padding:1.6rem 1.8rem; }
+  .moon, .sun { width:42px; height:42px; right:5%; }
+  .ufo-wrap { left:4%; top:115px; }
+  .ufo-body { width:62px; height:24px; }
+  .ufo-dome { width:32px; height:22px; top:-20px; }
+  .footer-inner { flex-direction:column; text-align:center; align-items:center; }
 }
-@media (max-width: 400px) {
-  .hero h1 { font-size: 2.6rem; }
-  .hero-btns { flex-direction: column; }
-  .hero-btns a { text-align: center; }
+@media (max-width:400px) {
+  .hero h1 { font-size:2.6rem; }
+  .hero-btns { flex-direction:column; }
+  .hero-btns a { text-align:center; }
 }
 </style>
 </head>
 <body>
 
-<!-- ─── SKY CANVAS ─── -->
+<!-- ─── STARS + SHOOTING STARS CANVAS ─── -->
 <canvas id="sky-canvas"></canvas>
 
-<!-- ─── NIGHT ELEMENTS ─── -->
-<div class="moon night-only"></div>
+<!-- ─── CITY / ENVIRONMENT SCENE ─── -->
+<div class="scene-bg">
+<svg viewBox="0 0 1440 310" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- BUILDINGS left zone -->
+  <rect class="sb"  x="0"   y="225" width="52"  height="85"/>
+  <rect class="sb2" x="3"   y="218" width="46"  height="12" rx="3"/>
+  <rect class="win-w"   x="10"  y="235" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="30"  y="235" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="10"  y="252" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="30"  y="252" width="12" height="10" rx="1"/>
+  <rect class="sb2" x="58"  y="213" width="58"  height="97"/>
+  <rect class="sb"  x="61"  y="206" width="52"  height="12" rx="3"/>
+  <rect class="win-w"   x="67"  y="222" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="85"  y="222" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="103" y="222" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="67"  y="237" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="85"  y="237" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="103" y="237" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="67"  y="252" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="85"  y="252" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="103" y="252" width="11" height="9" rx="1"/>
+  <!-- Taller block -->
+  <rect class="sb"  x="125" y="148" width="68"  height="162"/>
+  <rect class="sb2" x="127" y="140" width="64"  height="14" rx="2"/>
+  <rect class="win-d"   x="135" y="158" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="153" y="158" width="11" height="10" rx="1"/>
+  <rect class="win-off" x="171" y="158" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="135" y="175" width="11" height="10" rx="1"/>
+  <rect class="win-off" x="153" y="175" width="11" height="10" rx="1"/>
+  <rect class="win-d"   x="171" y="175" width="11" height="10" rx="1"/>
+  <rect class="win-d"   x="135" y="193" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="153" y="193" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="171" y="193" width="11" height="10" rx="1"/>
+  <rect class="win-off" x="135" y="210" width="11" height="10" rx="1"/>
+  <rect class="win-d"   x="153" y="210" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="171" y="210" width="11" height="10" rx="1"/>
+  <rect class="win-w"   x="135" y="227" width="11" height="10" rx="1"/>
+  <rect class="win-off" x="153" y="227" width="11" height="10" rx="1"/>
+  <rect class="win-d"   x="171" y="227" width="11" height="10" rx="1"/>
+  <!-- Slim office tower -->
+  <rect class="sb2" x="202" y="100" width="60"  height="210"/>
+  <rect class="sb"  x="205" y="92"  width="54"  height="14" rx="2"/>
+  <rect class="sb2" x="218" y="80"  width="28"  height="20" rx="3"/>
+  <line x1="232" y1="80" x2="232" y2="62" stroke="#1a2a3a" stroke-width="2.5"/>
+  <rect class="win-w"   x="211" y="110" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="243" y="110" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="211" y="124" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="243" y="124" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="211" y="138" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="243" y="138" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="211" y="152" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="243" y="152" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="211" y="166" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="243" y="166" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="211" y="180" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="243" y="180" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="211" y="194" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="243" y="194" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="211" y="208" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="243" y="208" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="211" y="222" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="243" y="222" width="10" height="8" rx="1"/>
+  <!-- Medium block -->
+  <rect class="sb"  x="272" y="172" width="70"  height="138"/>
+  <rect class="sb2" x="275" y="164" width="64"  height="14" rx="2"/>
+  <rect class="win-d"   x="283" y="182" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="302" y="182" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="320" y="182" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="283" y="198" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="302" y="198" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="320" y="198" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="283" y="214" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="302" y="214" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="320" y="214" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="283" y="230" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="302" y="230" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="320" y="230" width="12" height="10" rx="1"/>
+  <!-- Wide center-left building -->
+  <rect class="sb2" x="350" y="125" width="95"  height="185"/>
+  <rect class="sb"  x="353" y="116" width="89"  height="16" rx="3"/>
+  <rect class="win-w"   x="360" y="135" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="385" y="135" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="410" y="135" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="360" y="151" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="385" y="151" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="410" y="151" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="360" y="167" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="385" y="167" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="410" y="167" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="360" y="183" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="385" y="183" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="410" y="183" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="360" y="199" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="385" y="199" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="410" y="199" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="360" y="215" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="385" y="215" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="410" y="215" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="360" y="231" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="385" y="231" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="410" y="231" width="12" height="10" rx="1"/>
+  <!-- TALLEST building (landmark) -->
+  <rect class="sb"  x="455" y="72"  width="72"  height="238"/>
+  <rect class="sb2" x="459" y="62"  width="64"  height="16" rx="2"/>
+  <rect class="sb"  x="472" y="48"  width="38"  height="20" rx="3"/>
+  <line x1="491" y1="48" x2="491" y2="28" stroke="#1a2a3a" stroke-width="3"/>
+  <rect class="win-w"   x="464" y="82"  width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="500" y="82"  width="11" height="9" rx="1"/>
+  <rect class="win-off" x="464" y="97"  width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="500" y="97"  width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="464" y="112" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="500" y="112" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="464" y="127" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="500" y="127" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="464" y="142" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="500" y="142" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="464" y="157" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="500" y="157" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="464" y="172" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="500" y="172" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="464" y="187" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="500" y="187" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="464" y="202" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="500" y="202" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="464" y="217" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="500" y="217" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="464" y="232" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="500" y="232" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="464" y="247" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="500" y="247" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="464" y="262" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="500" y="262" width="11" height="9" rx="1"/>
+  <!-- Right-center block -->
+  <rect class="sb2" x="538" y="148" width="62"  height="162"/>
+  <rect class="sb"  x="541" y="140" width="56"  height="14" rx="2"/>
+  <rect class="win-d"   x="549" y="158" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="566" y="158" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="582" y="158" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="549" y="173" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="566" y="173" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="582" y="173" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="549" y="188" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="566" y="188" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="582" y="188" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="549" y="203" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="566" y="203" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="582" y="203" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="549" y="218" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="566" y="218" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="582" y="218" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="549" y="233" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="566" y="233" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="582" y="233" width="10" height="9" rx="1"/>
+  <!-- Shorter block with detail -->
+  <rect class="sb"  x="612" y="170" width="75"  height="140"/>
+  <rect class="sb2" x="615" y="162" width="69"  height="14" rx="2"/>
+  <rect class="win-w"   x="622" y="180" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="642" y="180" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="662" y="180" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="622" y="196" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="642" y="196" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="662" y="196" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="622" y="212" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="642" y="212" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="662" y="212" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="622" y="228" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="642" y="228" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="662" y="228" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="622" y="244" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="642" y="244" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="662" y="244" width="12" height="10" rx="1"/>
+  <!-- Right zone tall -->
+  <rect class="sb2" x="700" y="118" width="68"  height="192"/>
+  <rect class="sb"  x="703" y="109" width="62"  height="15" rx="2"/>
+  <rect class="win-d"   x="711" y="128" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="730" y="128" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="748" y="128" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="711" y="143" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="730" y="143" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="748" y="143" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="711" y="158" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="730" y="158" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="748" y="158" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="711" y="173" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="730" y="173" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="748" y="173" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="711" y="188" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="730" y="188" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="748" y="188" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="711" y="203" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="730" y="203" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="748" y="203" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="711" y="218" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="730" y="218" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="748" y="218" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="711" y="233" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="730" y="233" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="748" y="233" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="711" y="248" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="730" y="248" width="11" height="9" rx="1"/>
+  <rect class="win-off" x="748" y="248" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="711" y="263" width="11" height="9" rx="1"/>
+  <rect class="win-d"   x="730" y="263" width="11" height="9" rx="1"/>
+  <rect class="win-w"   x="748" y="263" width="11" height="9" rx="1"/>
+  <!-- Thin tall tower right -->
+  <rect class="sb"  x="780" y="82"  width="52"  height="228"/>
+  <rect class="sb2" x="783" y="74"  width="46"  height="14" rx="2"/>
+  <rect class="sb"  x="793" y="62"  width="26"  height="18" rx="3"/>
+  <line x1="806" y1="62" x2="806" y2="44" stroke="#1a2a3a" stroke-width="2.5"/>
+  <rect class="win-w"   x="787" y="92"  width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="804" y="92"  width="10" height="8" rx="1"/>
+  <rect class="win-off" x="787" y="106" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="804" y="106" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="787" y="120" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="804" y="120" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="787" y="134" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="804" y="134" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="787" y="148" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="804" y="148" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="787" y="162" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="804" y="162" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="787" y="176" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="804" y="176" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="787" y="190" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="804" y="190" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="787" y="204" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="804" y="204" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="787" y="218" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="804" y="218" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="787" y="232" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="804" y="232" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="787" y="246" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="804" y="246" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="787" y="260" width="10" height="8" rx="1"/>
+  <rect class="win-d"   x="804" y="260" width="10" height="8" rx="1"/>
+  <rect class="win-w"   x="787" y="274" width="10" height="8" rx="1"/>
+  <rect class="win-off" x="804" y="274" width="10" height="8" rx="1"/>
+  <!-- Right zone medium block -->
+  <rect class="sb2" x="842" y="145" width="88"  height="165"/>
+  <rect class="sb"  x="845" y="136" width="82"  height="15" rx="2"/>
+  <rect class="win-w"   x="852" y="155" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="872" y="155" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="892" y="155" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="912" y="155" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="852" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="872" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="892" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="912" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="852" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="872" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="892" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="912" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="852" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="872" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="892" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="912" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="852" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="872" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="892" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="912" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="852" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="872" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="892" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="912" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="852" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="872" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="892" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="912" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="852" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="872" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="892" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="912" y="267" width="12" height="10" rx="1"/>
+  <!-- Far right buildings -->
+  <rect class="sb"  x="1000" y="108" width="65" height="202"/>
+  <rect class="sb2" x="1003" y="99"  width="59" height="15" rx="2"/>
+  <rect class="win-w"   x="1010" y="118" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1028" y="118" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1046" y="118" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1010" y="133" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1028" y="133" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="133" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1010" y="148" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1028" y="148" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="148" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1010" y="163" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1028" y="163" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1046" y="163" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1010" y="178" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1028" y="178" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1046" y="178" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1010" y="193" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1028" y="193" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="193" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1010" y="208" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1028" y="208" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1046" y="208" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1010" y="223" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1028" y="223" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="223" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1010" y="238" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1028" y="238" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1046" y="238" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1010" y="253" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1028" y="253" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1046" y="253" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1010" y="268" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1028" y="268" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="268" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1010" y="283" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1028" y="283" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1046" y="283" width="10" height="9" rx="1"/>
+  <rect class="sb2" x="1075" y="162" width="82"  height="148"/>
+  <rect class="sb"  x="1078" y="153" width="76"  height="15" rx="2"/>
+  <rect class="win-d"   x="1085" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1106" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1127" y="171" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1085" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1106" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1127" y="187" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1085" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1106" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1127" y="203" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1085" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1106" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1127" y="219" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1085" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1106" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1127" y="235" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1085" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1106" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1127" y="251" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1085" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1106" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1127" y="267" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1085" y="283" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1106" y="283" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1127" y="283" width="12" height="10" rx="1"/>
+  <!-- Far right end -->
+  <rect class="sb"  x="1210" y="128" width="90"  height="182"/>
+  <rect class="sb2" x="1213" y="119" width="84"  height="15" rx="2"/>
+  <rect class="win-d"   x="1220" y="137" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1242" y="137" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1264" y="137" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="137" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1220" y="153" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1242" y="153" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1264" y="153" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1286" y="153" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1220" y="169" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1242" y="169" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1264" y="169" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="169" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1220" y="185" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1242" y="185" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1264" y="185" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="185" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1220" y="201" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1242" y="201" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1264" y="201" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="201" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1220" y="217" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1242" y="217" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1264" y="217" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="217" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1220" y="233" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1242" y="233" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1264" y="233" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1286" y="233" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1220" y="249" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1242" y="249" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1264" y="249" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1286" y="249" width="12" height="10" rx="1"/>
+  <rect class="win-w"   x="1220" y="265" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1242" y="265" width="12" height="10" rx="1"/>
+  <rect class="win-off" x="1264" y="265" width="12" height="10" rx="1"/>
+  <rect class="win-d"   x="1286" y="265" width="12" height="10" rx="1"/>
+  <rect class="sb2" x="1313" y="186" width="55"  height="124"/>
+  <rect class="sb"  x="1316" y="178" width="49"  height="14" rx="2"/>
+  <rect class="win-w"   x="1323" y="196" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1340" y="196" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1323" y="211" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1340" y="211" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1323" y="226" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1340" y="226" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1323" y="241" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1340" y="241" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1323" y="256" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1340" y="256" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1323" y="271" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1340" y="271" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1323" y="286" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1340" y="286" width="10" height="9" rx="1"/>
+  <rect class="sb"  x="1380" y="155" width="60"  height="155"/>
+  <rect class="sb2" x="1383" y="146" width="54"  height="15" rx="2"/>
+  <rect class="win-d"   x="1390" y="164" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1408" y="164" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1390" y="179" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1408" y="179" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1390" y="194" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1408" y="194" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1390" y="209" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1408" y="209" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1390" y="224" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1408" y="224" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1390" y="239" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1408" y="239" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1390" y="254" width="10" height="9" rx="1"/>
+  <rect class="win-off" x="1408" y="254" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1390" y="269" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1408" y="269" width="10" height="9" rx="1"/>
+  <rect class="win-w"   x="1390" y="284" width="10" height="9" rx="1"/>
+  <rect class="win-d"   x="1408" y="284" width="10" height="9" rx="1"/>
+
+  <!-- TREES -->
+  <rect class="tree-body" x="324" y="240" width="7"  height="70"/>
+  <ellipse class="tree-top" cx="327" cy="230" rx="16" ry="22"/>
+  <ellipse class="tree-top" cx="320" cy="242" rx="12" ry="16"/>
+  <ellipse class="tree-top" cx="335" cy="240" rx="12" ry="15"/>
+
+  <rect class="tree-body" x="640" y="235" width="7"  height="75"/>
+  <ellipse class="tree-top" cx="643" cy="225" rx="18" ry="24"/>
+  <ellipse class="tree-top" cx="634" cy="238" rx="13" ry="17"/>
+  <ellipse class="tree-top" cx="653" cy="236" rx="12" ry="16"/>
+
+  <rect class="tree-body" x="968" y="240" width="7"  height="70"/>
+  <polygon class="tree-top" points="971,192 951,258 991,258"/>
+  <polygon class="tree-top" points="971,208 956,265 986,265"/>
+
+  <rect class="tree-body" x="1170" y="238" width="7"  height="72"/>
+  <ellipse class="tree-top" cx="1173" cy="228" rx="17" ry="22"/>
+  <ellipse class="tree-top" cx="1163" cy="240" rx="12" ry="16"/>
+  <ellipse class="tree-top" cx="1184" cy="238" rx="13" ry="17"/>
+
+  <!-- STREET LAMPS -->
+  <rect class="lamp-pole" x="318" y="230" width="3"  height="80"/>
+  <rect class="lamp-pole" x="310" y="230" width="14" height="3" rx="1.5"/>
+  <ellipse class="lamp-glow" cx="317" cy="229" rx="12" ry="8" opacity="0.6"/>
+  <circle  class="lamp-top"  cx="317" cy="231" r="3"/>
+
+  <rect class="lamp-pole" x="653" y="228" width="3"  height="82"/>
+  <rect class="lamp-pole" x="645" y="228" width="14" height="3" rx="1.5"/>
+  <ellipse class="lamp-glow" cx="652" cy="227" rx="12" ry="8" opacity="0.6"/>
+  <circle  class="lamp-top"  cx="652" cy="229" r="3"/>
+
+  <rect class="lamp-pole" x="983" y="232" width="3"  height="78"/>
+  <rect class="lamp-pole" x="975" y="232" width="14" height="3" rx="1.5"/>
+  <ellipse class="lamp-glow" cx="982" cy="231" rx="12" ry="8" opacity="0.6"/>
+  <circle  class="lamp-top"  cx="982" cy="233" r="3"/>
+
+  <rect class="lamp-pole" x="1186" y="230" width="3"  height="80"/>
+  <rect class="lamp-pole" x="1178" y="230" width="14" height="3" rx="1.5"/>
+  <ellipse class="lamp-glow" cx="1185" cy="229" rx="12" ry="8" opacity="0.6"/>
+  <circle  class="lamp-top"  cx="1185" cy="231" r="3"/>
+
+  <!-- GROUND -->
+  <rect class="sg" x="0" y="297" width="1440" height="13"/>
+</svg>
+</div>
+
+<!-- ─── MOON & SUN ─── -->
+<div class="moon"></div>
 <div class="sun"></div>
 
-<div class="ufo-wrap night-only">
-  <div class="ufo-dome"></div>
+<!-- ─── UFO with Alien — z-index:500, passes in front of hero title ─── -->
+<div class="ufo-wrap" id="ufoWrap">
+  <div class="ufo-dome">
+    <svg class="alien-svg" viewBox="0 0 44 36" xmlns="http://www.w3.org/2000/svg">
+      <line x1="15" y1="4"  x2="11" y2="12" stroke="#55dd55" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="10" cy="2.5" r="2.2" fill="#88ff88"/>
+      <line x1="29" y1="4"  x2="33" y2="12" stroke="#55dd55" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="34" cy="2.5" r="2.2" fill="#88ff88"/>
+      <ellipse cx="22" cy="22" rx="11" ry="13" fill="#44cc44"/>
+      <ellipse cx="16" cy="20" rx="4.5" ry="5.5" fill="#111"/>
+      <ellipse cx="28" cy="20" rx="4.5" ry="5.5" fill="#111"/>
+      <circle cx="14.5" cy="18.2" r="1.6" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="26.5" cy="18.2" r="1.6" fill="rgba(255,255,255,0.5)"/>
+      <path d="M 16 28 Q 22 32 28 28" stroke="#2a8a2a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
   <div class="ufo-body">
     <div class="ufo-lights">
       <div class="ufo-light"></div>
@@ -1135,15 +1497,9 @@ footer {
   <div class="ufo-beam"></div>
 </div>
 
-<div class="trees-bar night-only">
-  <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#060c1a" d="M0,200 L0,120 L25,105 L35,118 L55,65 L75,118 L85,105 L110,82 L120,97 L140,140 L165,120 L178,134 L192,88 L212,134 L228,115 L240,128 L265,100 L282,128 L300,105 L315,120 L328,72 L348,120 L368,95 L388,128 L412,110 L428,124 L446,78 L466,124 L484,100 L502,138 L528,115 L545,128 L562,82 L582,128 L600,100 L618,135 L638,108 L655,122 L672,68 L692,122 L710,92 L730,128 L754,100 L772,122 L790,76 L812,122 L830,105 L850,122 L866,70 L886,122 L906,90 L926,128 L948,100 L968,120 L988,80 L1008,120 L1026,100 L1044,130 L1068,105 L1088,120 L1108,76 L1128,120 L1148,95 L1168,128 L1192,100 L1212,128 L1234,108 L1252,122 L1274,84 L1294,128 L1318,108 L1340,122 L1360,88 L1385,128 L1408,108 L1440,130 L1440,200 Z"/>
-  </svg>
-</div>
-
 <!-- ─── NAVBAR ─── -->
 <nav id="navbar">
-  <div class="nav-logo">JOSE ANGEL P.</div>
+  <div class="nav-logo">JAY FREELANCER SERVICES</div>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -1166,21 +1522,18 @@ footer {
 
 <!-- ─── MOBILE MENU ─── -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="closeMobile()">Services</a>
-  <a href="#skills" onclick="closeMobile()">Skills</a>
+  <a href="#services"   onclick="closeMobile()">Services</a>
+  <a href="#skills"     onclick="closeMobile()">Skills</a>
   <a href="#experience" onclick="closeMobile()">Experience</a>
-  <a href="#reviews" onclick="closeMobile()">Reviews</a>
-  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="#reviews"    onclick="closeMobile()">Reviews</a>
+  <a href="#contact"    onclick="closeMobile()">Contact</a>
   <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank">Hire Me on Upwork →</a>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     HERO
-═══════════════════════════════════════════ -->
+<!-- ═══ HERO ═══ -->
 <section class="hero" id="home">
   <div class="container">
     <div class="hero-inner">
-      <!-- LEFT -->
       <div class="hero-left reveal">
         <div class="hero-badge">
           <div class="badge-dot"></div>
@@ -1188,7 +1541,7 @@ footer {
         </div>
         <h1>
           Front-End<br/>Developer<br/>
-          <span class="name">Jose Angel P.</span>
+          <span class="name" id="heroName">Jay Freelancer Services</span>
         </h1>
         <p class="hero-role">IT Systems & Automation Architect · Meta Ads Specialist</p>
         <p>I turn ideas and designs into pixel-perfect, blazing-fast web applications. Clean code, zero bloat, 100% responsive — and a systems background that makes everything I build actually work at scale.</p>
@@ -1199,17 +1552,14 @@ footer {
         <div class="hero-stats">
           <div class="hs"><span class="hs-num">100%</span><span class="hs-lbl">Job Success</span></div>
           <div class="hs"><span class="hs-num">$20K+</span><span class="hs-lbl">Total Earned</span></div>
-          <div class="hs"><span class="hs-num">2,242</span><span class="hs-lbl">Hours Billed</span></div>
-          <div class="hs"><span class="hs-num">4.7★</span><span class="hs-lbl">Rating</span></div>
         </div>
       </div>
-      <!-- RIGHT: Profile card -->
       <div class="hero-card reveal">
         <div class="hc-top">
           <div class="hc-avatar">👨‍💻</div>
           <div>
-            <div class="hc-name">Jose Angel P.</div>
-            <div class="hc-loc">📍 Santo Domingo Este, Dominican Republic</div>
+            <div class="hc-name">Jay — Front-End Developer</div>
+            <div class="hc-loc">📍 Santo Domingo, Dominican Republic</div>
           </div>
           <div class="hc-badge">Top Rated</div>
         </div>
@@ -1217,12 +1567,7 @@ footer {
           <div class="hc-m"><div class="hc-m-val">100%</div><div class="hc-m-key">Job Success</div></div>
           <div class="hc-m"><div class="hc-m-val">$20K+</div><div class="hc-m-key">Total Earned</div></div>
           <div class="hc-m"><div class="hc-m-val">0–4 hrs</div><div class="hc-m-key">Avg. Response</div></div>
-          <div class="hc-m"><div class="hc-m-val">🟢 Online</div><div class="hc-m-key">Status</div></div>
-        </div>
-        <div class="hc-stars">
-          <span class="stars">★★★★★</span>
-          <span style="font-weight:700;">4.7</span>
-          <span style="color:var(--muted);font-size:.78rem;">(3 reviews)</span>
+          <div class="hc-m"><div class="hc-m-val">EN / ES</div><div class="hc-m-key">Bilingual</div></div>
         </div>
         <div class="hc-tags">
           <span class="tag">React</span>
@@ -1239,9 +1584,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SERVICES
-═══════════════════════════════════════════ -->
+<!-- ═══ SERVICES ═══ -->
 <section class="alt" id="services">
   <div class="container">
     <div class="reveal">
@@ -1251,7 +1594,6 @@ footer {
       <p class="section-sub">Custom React &amp; JavaScript websites, delivered fast. Every package includes fully responsive design, clean code, and source files. <strong>Message me before ordering</strong> so we can discuss your exact needs.</p>
     </div>
     <div class="services-grid">
-      <!-- Starter -->
       <div class="svc-card reveal">
         <div class="svc-badge">Starter</div>
         <div class="svc-price"><sup>$</sup>50</div>
@@ -1266,9 +1608,9 @@ footer {
           <li>+$15 per additional revision</li>
           <li>+$40 per additional page</li>
         </ul>
-        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share" target="_blank" class="svc-cta">Get Started →</a>
+        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share"
+           target="_blank" class="svc-cta">Get Started →</a>
       </div>
-      <!-- Standard -->
       <div class="svc-card featured reveal">
         <div class="svc-badge">★ Most Popular</div>
         <div class="svc-price"><sup>$</sup>120</div>
@@ -1283,9 +1625,9 @@ footer {
           <li>+$15 per additional revision</li>
           <li>+$40 per additional page</li>
         </ul>
-        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share" target="_blank" class="svc-cta">Get Started →</a>
+        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share&tier=1"
+           target="_blank" class="svc-cta">Get Started →</a>
       </div>
-      <!-- Advanced -->
       <div class="svc-card reveal">
         <div class="svc-badge">Advanced</div>
         <div class="svc-price"><sup>$</sup>200</div>
@@ -1293,22 +1635,21 @@ footer {
         <div class="svc-desc">5 Page Premium React Website</div>
         <ul class="svc-features">
           <li>Up to 5 premium responsive pages</li>
-          <li>Highly optimized for speed & scale</li>
+          <li>Highly optimized for speed &amp; scale</li>
           <li>5 revisions included</li>
           <li>Delivery in 6 days</li>
           <li>Source code delivered</li>
           <li>+$15 per additional revision</li>
           <li>+$40 per additional page</li>
         </ul>
-        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share" target="_blank" class="svc-cta">Get Started →</a>
+        <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share&tier=2"
+           target="_blank" class="svc-cta">Get Started →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SKILLS
-═══════════════════════════════════════════ -->
+<!-- ═══ SKILLS ═══ -->
 <section id="skills">
   <div class="container">
     <div class="reveal">
@@ -1393,9 +1734,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     EXPERIENCE
-═══════════════════════════════════════════ -->
+<!-- ═══ EXPERIENCE ═══ -->
 <section class="alt" id="experience">
   <div class="container">
     <div class="reveal">
@@ -1424,7 +1763,7 @@ footer {
           <li>Managed initial client intake for personal injury cases — gathering documents, scheduling, and explaining legal processes clearly.</li>
           <li>Delivered bilingual (English/Spanish) support to a diverse client base across all cases.</li>
           <li>Utilized Smart Advocate and Salesforce to maintain accurate, organized case records.</li>
-          <li>Received a recommendation letter from the Performance & Leadership Manager for exceptional performance.</li>
+          <li>Received a recommendation letter from the Performance &amp; Leadership Manager for exceptional performance.</li>
         </ul>
       </div>
       <div class="tl-item reveal">
@@ -1441,9 +1780,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     REVIEWS
-═══════════════════════════════════════════ -->
+<!-- ═══ REVIEWS ═══ -->
 <section id="reviews">
   <div class="container">
     <div class="reveal">
@@ -1489,9 +1826,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     CONTACT
-═══════════════════════════════════════════ -->
+<!-- ═══ CONTACT ═══ -->
 <section class="alt" id="contact">
   <div class="container">
     <div class="contact-box reveal">
@@ -1516,8 +1851,8 @@ footer {
 <!-- ─── FOOTER ─── -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">Jose Angel P.</div>
-    <p class="footer-copy">© 2025 Jose Angel P. · Front-End Developer & IT Systems Specialist</p>
+    <div class="footer-logo">JAY FREELANCER SERVICES</div>
+    <p class="footer-copy">© 2026 Jay Freelancer Services · Front-End Developer & IT Systems Specialist</p>
     <nav class="footer-nav">
       <a href="#services">Services</a>
       <a href="#skills">Skills</a>
@@ -1527,32 +1862,62 @@ footer {
   </div>
 </footer>
 
-<!-- ─── NEON SIGN ─── -->
+<!-- ─── NEON SIGN (single blue neon) ─── -->
 <div class="neon-section">
   <div class="neon-frame">
     <span class="neon-sign">
-      Let's Build<br/>
-      <span class="nb">Something</span>
+      Let's Build<br/>Something Great
     </span>
-    <span class="neon-sub-sign">✦ Great Together ✦</span>
+    <span class="neon-sub-sign">✦ Open for Projects ✦</span>
   </div>
-  <p class="neon-tagline">Open for projects · Fast delivery · Clean code</p>
+  <p class="neon-tagline">Fast delivery · Clean code · Real results</p>
 </div>
 
 <!-- ═══════════════════════════════════════════
      JAVASCRIPT
+     ⚠️ FIX: heroNameEl and originalText are declared
+     BEFORE applyTheme() is called to avoid
+     ReferenceError (temporal dead zone for const).
+     This was the root cause of ALL broken behavior.
 ═══════════════════════════════════════════ -->
 <script>
 /* ────────────────────────────────────────
-   DAY / NIGHT BASED ON LOCAL TIME
-   Day  = 06:00 – 17:59
-   Night = 18:00 – 05:59
+   DECLARE SHARED REFS FIRST — must come before
+   any function that uses them is called
 ──────────────────────────────────────── */
-const html = document.documentElement;
-const modeToggle = document.getElementById('modeToggle');
-const modeIcon   = document.getElementById('modeIcon');
-const modeLabel  = document.getElementById('modeLabel');
+const html        = document.documentElement;
+const modeToggle  = document.getElementById('modeToggle');
+const modeIcon    = document.getElementById('modeIcon');
+const modeLabel   = document.getElementById('modeLabel');
+const heroNameEl  = document.getElementById('heroName');   // ← MOVED UP
+const ORIGINAL_TEXT = 'Jay Freelancer Services';           // ← MOVED UP
 
+/* ────────────────────────────────────────
+   1. NEON NAME — split into letter spans in dark mode
+   Each letter gets a random --dur and --delay
+   so they flicker independently like a faulty neon tube.
+   Light mode: restore plain text, zero glow.
+──────────────────────────────────────── */
+function initNeonName() {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    const markup = [...ORIGINAL_TEXT].map(char => {
+      if (char === ' ') return '<span class="nl-space"> </span>';
+      const dur   = (5 + Math.random() * 7).toFixed(2) + 's';
+      const delay = (Math.random() * 8).toFixed(2) + 's';
+      return `<span class="nl" style="--dur:${dur};--delay:${delay}">${char}</span>`;
+    }).join('');
+    heroNameEl.innerHTML = markup;
+  } else {
+    heroNameEl.textContent = ORIGINAL_TEXT;
+  }
+}
+
+/* ────────────────────────────────────────
+   2. DAY / NIGHT — auto-detect + manual toggle
+   Day  = 06:00 – 17:59 → light
+   Night = 18:00 – 05:59 → dark
+──────────────────────────────────────── */
 function getAutoTheme() {
   const h = new Date().getHours();
   return (h >= 6 && h < 18) ? 'light' : 'dark';
@@ -1567,19 +1932,21 @@ function applyTheme(theme) {
     modeIcon.textContent  = '☀️';
     modeLabel.textContent = 'Day Mode';
   }
+  initNeonName(); // safe now — heroNameEl already declared above
 }
 
-// Auto on load
+// Auto-detect on load
 applyTheme(getAutoTheme());
 
-// Manual toggle
+// Manual override
 modeToggle.addEventListener('click', () => {
-  const current = html.getAttribute('data-theme');
-  applyTheme(current === 'dark' ? 'light' : 'dark');
+  applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 
 /* ────────────────────────────────────────
-   STARS + SHOOTING STARS CANVAS
+   3. STARS + 2 SHOOTING STARS CANVAS
+   - Two stars per spawn cycle, staggered 150–550ms apart
+   - UFO triggered 3s after the FIRST pair ever appears
 ──────────────────────────────────────── */
 const canvas = document.getElementById('sky-canvas');
 const ctx    = canvas.getContext('2d');
@@ -1593,99 +1960,106 @@ function resize() {
 
 function buildStars() {
   stars = [];
-  const n = Math.floor((W * H) / 2800);
+  const n = Math.floor((W * H) / 2600);
   for (let i = 0; i < n; i++) {
     stars.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 1.4 + 0.25,
-      a: Math.random(),
-      speed: Math.random() * 0.007 + 0.003,
-      dir: Math.random() > 0.5 ? 1 : -1,
-      col: ['#ffffff','#aadeff','#ffeeaa','#ccaaff'][Math.floor(Math.random()*4)]
+      x:     Math.random() * W,
+      y:     Math.random() * H,
+      r:     Math.random() * 1.5 + 0.2,
+      a:     Math.random(),
+      speed: Math.random() * 0.008 + 0.003,
+      dir:   Math.random() > 0.5 ? 1 : -1,
+      col:   ['#ffffff','#aadeff','#ffeeaa','#ccaaff'][Math.floor(Math.random()*4)]
     });
   }
 }
 
-// Shooting star object factory
-function spawnShooter() {
-  // Start from top-left region, travel diagonally down-right
-  const startX = Math.random() * W * 0.7;
-  const startY = Math.random() * H * 0.4;
+// Shooting star factory — angle ~45° diagonal with slight variance
+function spawnShooter(xOffset = 0, yOffset = 0) {
+  const sx = Math.random() * W * 0.65 + xOffset;
+  const sy = Math.random() * H * 0.35 + yOffset;
   return {
-    x: startX,
-    y: startY,
-    len: Math.random() * 160 + 80,   // tail length px
-    speed: Math.random() * 14 + 10,  // px per frame
-    angle: Math.PI / 4 + (Math.random() - .5) * 0.4, // ~45° ± some variance
-    alpha: 1,
-    fade: Math.random() * 0.02 + 0.02,
-    life: 1,
-    dead: false
+    x:     Math.max(0, Math.min(W, sx)),
+    y:     Math.max(0, Math.min(H * 0.5, sy)),
+    len:   Math.random() * 170 + 90,
+    speed: Math.random() * 13 + 10,
+    angle: Math.PI / 4 + (Math.random() - .5) * 0.45,
+    life:  1,
+    fade:  Math.random() * 0.018 + 0.018,
+    dead:  false
   };
 }
 
-// Spawn a shooter every 4–9 seconds
-let lastShoot = 0;
-let nextShootDelay = 5000;
+// UFO state
+let firstShootSeen = false;
+let ufoTriggered   = false;
+let lastShoot      = 0;
+let nextShootDelay = 4500 + Math.random() * 3000;
 
 function tick(ts) {
   ctx.clearRect(0, 0, W, H);
 
-  // ── twinkling stars ──
+  // Twinkling stars
   for (const s of stars) {
     s.a += s.speed * s.dir;
     if (s.a >= 1 || s.a <= 0) s.dir *= -1;
     ctx.beginPath();
     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = s.col;
+    ctx.fillStyle   = s.col;
     ctx.globalAlpha = Math.max(0, Math.min(1, s.a));
     ctx.fill();
   }
   ctx.globalAlpha = 1;
 
-  // ── shooting stars ──
+  // Spawn 2 shooting stars per cycle with a stagger
   if (ts - lastShoot > nextShootDelay) {
-    shooters.push(spawnShooter());
-    lastShoot = ts;
-    nextShootDelay = 4000 + Math.random() * 5000;
+    shooters.push(spawnShooter());                     // star 1 immediately
+    const stagger = 150 + Math.random() * 400;
+    setTimeout(() => {
+      shooters.push(spawnShooter(W * 0.05, -15));     // star 2 slightly offset
+    }, stagger);
+
+    // UFO: trigger 3s after the first ever pair
+    if (!firstShootSeen) {
+      firstShootSeen = true;
+      setTimeout(triggerUFO, 3000);
+    }
+    lastShoot      = ts;
+    nextShootDelay = 5000 + Math.random() * 5000;
   }
 
+  // Draw shooting stars — gradient tail + bright head dot
   for (const sh of shooters) {
     if (sh.dead) continue;
-
     const dx = Math.cos(sh.angle) * sh.speed;
     const dy = Math.sin(sh.angle) * sh.speed;
+    const tx = sh.x - Math.cos(sh.angle) * sh.len;
+    const ty = sh.y - Math.sin(sh.angle) * sh.len;
 
-    // Draw tail: gradient line from bright head to transparent tail
-    const tailX = sh.x - Math.cos(sh.angle) * sh.len;
-    const tailY = sh.y - Math.sin(sh.angle) * sh.len;
-
-    const grad = ctx.createLinearGradient(tailX, tailY, sh.x, sh.y);
-    grad.addColorStop(0, 'rgba(255,255,255,0)');
-    grad.addColorStop(1, `rgba(255,255,255,${sh.life * 0.9})`);
+    const grad = ctx.createLinearGradient(tx, ty, sh.x, sh.y);
+    grad.addColorStop(0,   'rgba(255,255,255,0)');
+    grad.addColorStop(0.6, `rgba(180,220,255,${sh.life * 0.5})`);
+    grad.addColorStop(1,   `rgba(255,255,255,${sh.life * 0.95})`);
 
     ctx.beginPath();
-    ctx.moveTo(tailX, tailY);
+    ctx.moveTo(tx, ty);
     ctx.lineTo(sh.x, sh.y);
     ctx.strokeStyle = grad;
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth   = 1.8;
     ctx.globalAlpha = sh.life;
     ctx.stroke();
     ctx.globalAlpha = 1;
 
-    // Bright head dot
+    // Head glow dot
     ctx.beginPath();
-    ctx.arc(sh.x, sh.y, 1.8, 0, Math.PI * 2);
+    ctx.arc(sh.x, sh.y, 2.2, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255,255,255,${sh.life})`;
     ctx.fill();
 
-    sh.x += dx;
-    sh.y += dy;
+    sh.x += dx; sh.y += dy;
     sh.life -= sh.fade;
-    if (sh.life <= 0 || sh.x > W + 100 || sh.y > H + 100) sh.dead = true;
+    if (sh.life <= 0 || sh.x > W + 120 || sh.y > H + 120) sh.dead = true;
   }
-  // Purge dead
   shooters = shooters.filter(s => !s.dead);
 
   requestAnimationFrame(tick);
@@ -1696,10 +2070,35 @@ resize();
 requestAnimationFrame(tick);
 
 /* ────────────────────────────────────────
-   HAMBURGER MENU
+   4. UFO ENTRANCE — starts invisible,
+   appears 3s after first shooting star,
+   grows from tiny (scale 0.03) sweeping
+   across the hero title (z-index 500),
+   then enters gentle drift loop.
 ──────────────────────────────────────── */
-const hamburger   = document.getElementById('hamburger');
-const mobileMenu  = document.getElementById('mobileMenu');
+const ufoWrap = document.getElementById('ufoWrap');
+
+function triggerUFO() {
+  if (ufoTriggered) return;
+  ufoTriggered = true;
+
+  // Only show UFO in dark/night mode
+  if (html.getAttribute('data-theme') !== 'dark') return;
+
+  ufoWrap.classList.add('ufo-entering');
+  ufoWrap.addEventListener('animationend', () => {
+    if (ufoWrap.classList.contains('ufo-entering')) {
+      ufoWrap.classList.remove('ufo-entering');
+      ufoWrap.classList.add('ufo-drifting');
+    }
+  }, { once: true });
+}
+
+/* ────────────────────────────────────────
+   5. HAMBURGER MENU
+──────────────────────────────────────── */
+const hamburger  = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
 
 hamburger.addEventListener('click', () => {
   hamburger.classList.toggle('open');
@@ -1712,7 +2111,7 @@ function closeMobile() {
 }
 
 /* ────────────────────────────────────────
-   SCROLL REVEAL
+   6. SCROLL REVEAL
 ──────────────────────────────────────── */
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
