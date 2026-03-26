@@ -24,22 +24,20 @@
   --glow:     rgba(74,158,255,0.35);
   --card-shadow: 0 8px 32px rgba(0,0,0,0.45);
   --tr: 0.55s cubic-bezier(.4,0,.2,1);
-  /* city scene palette (night) */
-  --sb:   #0d1828;
-  --sb2:  #0a1220;
-  --sw:   #ffc84a;
-  --sw2:  #cc9022;
-  --sg:   #040c12;
-  --str:  #071a08;
-  --stt:  #0a2510;
-  --slp:  rgba(255,160,40,0.75);
-  --slp2: rgba(255,200,100,0.9);
+  /* pine landscape palette (night) */
+  --land-mountain:    #0a1a10;
+  --land-mountain2:   #071208;
+  --land-forest-far:  #071005;
+  --land-forest-near: #040c03;
+  --land-ground:      #030803;
+  --land-trunk:       #050705;
+  --land-sky:         transparent;
 }
 
 /* LIGHT (DAY) overrides */
 [data-theme="light"] {
-  --bg:       #c8dff8;
-  --bg2:      #b8d5f2;
+  --bg:       #d0e8f8;
+  --bg2:      #bcd8f0;
   --surface:  #ffffff;
   --surface2: #f0f5ff;
   --accent:   #1a6fd4;
@@ -50,15 +48,14 @@
   --border:   rgba(26,111,212,0.18);
   --glow:     rgba(26,111,212,0.2);
   --card-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  --sb:   #b8a890;
-  --sb2:  #cabb9a;
-  --sw:   #85c3e0;
-  --sw2:  #a8d5ea;
-  --sg:   #4a7a3a;
-  --str:  #6b4c2a;
-  --stt:  #3a8028;
-  --slp:  rgba(0,0,0,0);
-  --slp2: rgba(0,0,0,0);
+  /* pine landscape palette (day) */
+  --land-mountain:    #7aaa88;
+  --land-mountain2:   #5a9068;
+  --land-forest-far:  #2a6a38;
+  --land-forest-near: #1e5a2a;
+  --land-ground:      #3a6e2a;
+  --land-trunk:       #6b4c2a;
+  --land-sky:         linear-gradient(to bottom, #87ceeb 0%, #b8e0f7 55%, #d4f0c4 100%);
 }
 
 /* ═══════════════════════════════════════════
@@ -93,55 +90,32 @@ button { cursor:pointer; font-family:inherit; border:none; background:none; }
 [data-theme="light"] #sky-canvas { opacity: 0; }
 
 /* ═══════════════════════════════════════════
-   CITY / ENVIRONMENT SCENE BACKGROUND
-   Visible in BOTH day and night with different styling
+   PINE FOREST / LANDSCAPE SCENE
+   Day = colorful mountain + forest | Night = dark silhouettes
 ═══════════════════════════════════════════ */
 .scene-bg {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: 310px;
+  height: 320px;
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
 }
 .scene-bg svg { width:100%; height:100%; display:block; }
 
-.sb  { fill: var(--sb);  transition: fill 1.4s ease; }
-.sb2 { fill: var(--sb2); transition: fill 1.4s ease; }
-.sg  { fill: var(--sg);  transition: fill 1.4s ease; }
+/* Sky gradient layer — only visible in day mode */
+.land-sky {
+  transition: opacity 1.4s ease;
+}
+[data-theme="dark"] .land-sky { opacity: 0; }
+[data-theme="light"] .land-sky { opacity: 1; }
 
-.win-w {
-  fill: var(--sw);
-  transition: fill 1.4s ease, opacity 1.4s ease;
-}
-.win-d {
-  fill: var(--sw2);
-  transition: fill 1.4s ease, opacity 1.4s ease;
-}
-.win-off {
-  fill: var(--sb);
-  opacity: 0.5;
-  transition: fill 1.4s ease, opacity 1.4s ease;
-}
-[data-theme="light"] .win-off { fill: var(--sb2); opacity: 0.8; }
-
-.tree-top  { fill: var(--stt); transition: fill 1.4s ease; }
-.tree-body { fill: var(--str); transition: fill 1.4s ease; }
-
-.lamp-glow { fill: var(--slp);  transition: fill 1.4s ease; }
-.lamp-top  { fill: var(--slp2); transition: fill 1.4s ease; }
-.lamp-pole { fill: #2a3a4a; transition: fill 1.4s ease; }
-[data-theme="light"] .lamp-pole { fill: #8a8a8a; }
-
-[data-theme="dark"] .win-w,
-[data-theme="dark"] .win-d {
-  filter: drop-shadow(0 0 3px rgba(255,190,60,0.7));
-}
-[data-theme="light"] .win-w,
-[data-theme="light"] .win-d { filter: none; }
-[data-theme="dark"] .lamp-glow {
-  filter: drop-shadow(0 0 8px rgba(255,160,40,0.8));
-}
+.land-mountain  { fill: var(--land-mountain);   transition: fill 1.4s ease; }
+.land-mountain2 { fill: var(--land-mountain2);  transition: fill 1.4s ease; }
+.land-forest-far  { fill: var(--land-forest-far);  transition: fill 1.4s ease; }
+.land-forest-near { fill: var(--land-forest-near); transition: fill 1.4s ease; }
+.land-ground    { fill: var(--land-ground);     transition: fill 1.4s ease; }
+.land-trunk     { fill: var(--land-trunk);      transition: fill 1.4s ease; }
 
 /* ═══════════════════════════════════════════
    NAVBAR
@@ -171,8 +145,40 @@ nav {
   color: var(--accent2);
   white-space: nowrap;
   flex-shrink: 0;
+  transition: color var(--tr), text-shadow 1.4s ease;
 }
-[data-theme="light"] .nav-logo { color: var(--accent); }
+[data-theme="light"] .nav-logo { color: var(--accent); text-shadow: none; }
+[data-theme="dark"] .nav-logo {
+  color: #00d4ff;
+  text-shadow:
+    0 0 4px rgba(255,255,255,.85),
+    0 0 10px rgba(0,212,255,.9),
+    0 0 22px rgba(0,212,255,.7),
+    0 0 44px rgba(0,212,255,.4);
+  animation: logo-neon-breathe 3.5s ease-in-out infinite;
+}
+@keyframes logo-neon-breathe {
+  0%,100% {
+    text-shadow: 0 0 4px rgba(255,255,255,.85),0 0 10px rgba(0,212,255,.9),0 0 22px rgba(0,212,255,.7),0 0 44px rgba(0,212,255,.4);
+  }
+  50% {
+    text-shadow: 0 0 6px rgba(255,255,255,1),0 0 16px rgba(0,212,255,1),0 0 38px rgba(0,212,255,.85),0 0 72px rgba(0,212,255,.55),0 0 100px rgba(0,212,255,.25);
+  }
+}
+
+/* Nav mode text — semi-transparent, next to logo */
+.nav-mode-text {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  margin-left: .5rem;
+  white-space: nowrap;
+  transition: color var(--tr);
+  align-self: center;
+}
+[data-theme="light"] .nav-mode-text { color: rgba(0,30,80,0.3); }
 
 .nav-links { display:flex; gap:2rem; align-items:center; }
 .nav-links a {
@@ -187,47 +193,23 @@ nav {
 
 .nav-right { display:flex; align-items:center; gap:.8rem; flex-shrink:0; }
 
-/* Mode toggle pill */
-.mode-pill {
+/* Icon-only mode toggle */
+.mode-toggle-btn {
   display: flex;
   align-items: center;
-  gap: .45rem;
+  justify-content: center;
+  width: 40px; height: 40px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 50px;
-  padding: .32rem .75rem .32rem .5rem;
-  transition: background var(--tr), border-color var(--tr);
-  user-select: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  transition: background var(--tr), border-color var(--tr), transform .3s;
+  flex-shrink: 0;
 }
-.mode-pill:hover { border-color: var(--accent2); }
-.mode-icon  { font-size:1rem; line-height:1; }
-.mode-label {
-  font-size: .75rem;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
+.mode-toggle-btn:hover {
+  border-color: var(--accent2);
+  transform: rotate(20deg) scale(1.1);
 }
-.mode-switch {
-  width:38px; height:20px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 50px;
-  position: relative;
-  transition: background .4s;
-  margin-left: .2rem;
-}
-[data-theme="light"] .mode-switch { background: var(--accent2); }
-.mode-thumb {
-  width:14px; height:14px;
-  border-radius:50%;
-  background: var(--accent2);
-  position: absolute;
-  top:2px; left:2px;
-  transition: transform .4s cubic-bezier(.4,0,.2,1), background .4s;
-}
-[data-theme="light"] .mode-thumb { transform:translateX(18px); background:#fff; }
 
 .nav-cta {
   background: linear-gradient(135deg, var(--accent), var(--accent3));
@@ -331,16 +313,14 @@ nav {
   position: fixed;
   top: 142px;
   left: 8%;
-  z-index: 500; /* above hero section z-index:10 — passes IN FRONT of title */
+  z-index: 500;
   opacity: 0;
   pointer-events: none;
   transform-origin: center center;
 }
 
-/* UFO hidden in day mode */
 [data-theme="light"] .ufo-wrap { opacity: 0 !important; animation: none !important; }
 
-/* Entrance: starts tiny far top-right, sweeps across and grows */
 .ufo-wrap.ufo-entering {
   animation: ufo-enter 5.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -352,7 +332,6 @@ nav {
   100% { transform:translate(0,0) scale(1); opacity:1; filter:blur(0); }
 }
 
-/* After entrance: gentle drift */
 .ufo-wrap.ufo-drifting {
   opacity: 1;
   animation: ufo-drift 8s ease-in-out infinite;
@@ -364,7 +343,23 @@ nav {
   75%      { transform:translateY(-8px) translateX(-6px) rotate(-1deg); }
 }
 
-/* UFO body */
+.ufo-wrap.ufo-leaving {
+  animation: ufo-leave 3.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+@keyframes ufo-leave {
+  0%   { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+  40%  { transform:translate(-15vw, 40px) scale(0.35); opacity:0.9; }
+  70%  { transform:translate(-35vw, 65px) scale(0.08); opacity:0.7; }
+  82%  { transform:translate(-40vw, 70px) scale(0.12); opacity:1; filter:brightness(4) blur(1px); }
+  100% { transform:translate(-50vw, 75px) scale(0); opacity:0; filter:blur(4px); }
+}
+
+.btn-ufo-lit {
+  box-shadow: 0 0 18px rgba(80,200,255,0.85), 0 0 38px rgba(80,200,255,0.5), 0 0 70px rgba(80,200,255,0.25) !important;
+  transform: translateY(-3px) !important;
+  transition: box-shadow 1.2s ease, transform 0.5s ease !important;
+}
+
 .ufo-body {
   width:80px; height:30px;
   background: linear-gradient(160deg, #5ab0ff, #00d4ff 40%, #6a4cff);
@@ -376,7 +371,6 @@ nav {
     0 2px 0 rgba(255,255,255,.25) inset;
 }
 
-/* Glass dome with alien */
 .ufo-dome {
   width:42px; height:28px;
   background: rgba(150,220,255,0.18);
@@ -393,7 +387,6 @@ nav {
 }
 .alien-svg { width:34px; height:28px; flex-shrink:0; }
 
-/* UFO belly lights */
 .ufo-lights {
   display:flex; justify-content:space-around; align-items:center;
   position:absolute; bottom:4px; left:10px; right:10px;
@@ -410,7 +403,6 @@ nav {
   50%    { opacity:.15; box-shadow:none; }
 }
 
-/* Tractor beam */
 .ufo-beam {
   width:0; height:0;
   border-left:26px solid transparent;
@@ -463,7 +455,8 @@ section.alt { background:var(--bg2); }
 }
 .hero-inner {
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
+  max-width: 800px;
   align-items:center; gap:4rem;
 }
 .hero-badge {
@@ -491,7 +484,7 @@ section.alt { background:var(--bg2); }
   line-height:.95; letter-spacing:.02em; margin-bottom:1.4rem;
 }
 
-/* ── NEON NAME — dark mode: blue neon, light mode: gradient ── */
+/* ── NEON NAME ── */
 .hero h1 .name {
   display:block;
   background:linear-gradient(135deg,var(--accent2),var(--accent3));
@@ -509,7 +502,7 @@ section.alt { background:var(--bg2); }
   color:#00d4ff;
 }
 
-/* Individual letter spans for flicker (added by JS in dark mode) */
+/* Individual letter spans for flicker */
 [data-theme="dark"] .nl {
   display:inline;
   color:#00d4ff;
@@ -528,21 +521,16 @@ section.alt { background:var(--bg2); }
   -webkit-text-fill-color:transparent;
 }
 
-/* Faulty neon tube flicker per letter */
 @keyframes letter-dim {
-  0%,78%,100% { opacity:1; }
-  79%   { opacity:0.85; }
-  79.5% { opacity:0.15; text-shadow:none; }
-  80%   { opacity:1; }
-  81%   { opacity:0.7; }
-  81.5% { opacity:0.05; text-shadow:none; }
-  82%   { opacity:1; }
-  83%   { opacity:0.4; }
-  83.3% { opacity:1; }
-  83.8% { opacity:0; text-shadow:none; }
-  84.3% { opacity:0.9; }
-  85%   { opacity:0.2; }
-  85.5% { opacity:1; }
+  0%,88%,100% { opacity:1; }
+  88.5% { opacity:0.85; }
+  89%   { opacity:0.1; text-shadow:none; }
+  89.4% { opacity:1; }
+  90%   { opacity:0.7; }
+  90.4% { opacity:0.05; text-shadow:none; }
+  90.8% { opacity:1; }
+  91.4% { opacity:0.4; }
+  91.7% { opacity:1; }
 }
 
 /* Light mode: completely plain */
@@ -573,12 +561,18 @@ section.alt { background:var(--bg2); }
 .btn-primary:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(74,158,255,.5); }
 .btn-outline {
   display:inline-block;
-  border:1px solid var(--border); color:var(--text);
+  border:1.5px solid var(--accent2); color:var(--text);
+  background: rgba(74,158,255,0.07);
   padding:.75rem 1.9rem; border-radius:8px;
   font-size:.9rem; font-weight:600;
-  transition:border-color .3s,background .3s,transform .3s;
+  transition:border-color .3s,background .3s,transform .3s,box-shadow .3s;
 }
-.btn-outline:hover { border-color:var(--accent2); background:rgba(74,158,255,.05); transform:translateY(-3px); }
+[data-theme="light"] .btn-outline {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(26,111,212,0.06);
+}
+.btn-outline:hover { border-color:var(--accent2); background:rgba(74,158,255,.12); transform:translateY(-3px); box-shadow: 0 4px 14px rgba(74,158,255,.25); }
 
 /* Hero stats */
 .hero-stats { display:flex; gap:2rem; margin-top:2.4rem; flex-wrap:wrap; }
@@ -591,63 +585,19 @@ section.alt { background:var(--bg2); }
 [data-theme="light"] .hs-num { color:var(--accent); }
 .hs-lbl { font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
 
-/* Hero card */
-.hero-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:20px; padding:2rem;
-  box-shadow:var(--card-shadow); position:relative; overflow:hidden;
-}
-.hero-card::before {
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(circle at 80% 20%,rgba(74,158,255,.08),transparent 60%);
-  pointer-events:none;
-}
-.hc-top {
-  display:flex; align-items:center; gap:1rem;
-  margin-bottom:1.5rem; padding-bottom:1.5rem;
-  border-bottom:1px solid var(--border);
-}
-.hc-avatar {
-  width:60px; height:60px; border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent3));
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.6rem; flex-shrink:0;
-}
-.hc-name  { font-weight:700; font-size:1rem; margin-bottom:.2rem; }
-.hc-loc   { font-size:.78rem; color:var(--muted); }
-.hc-badge {
-  margin-left:auto;
-  background:linear-gradient(135deg,#ffd700,#ffaa00);
-  color:#000; font-size:.65rem; font-weight:800;
-  letter-spacing:.1em; padding:.25rem .6rem;
-  border-radius:4px; text-transform:uppercase;
-}
-.hc-metrics {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:1rem; margin-bottom:1.4rem;
-}
-.hc-m { text-align:center; }
-.hc-m-val { font-weight:700; font-size:1.05rem; margin-bottom:.1rem; }
-.hc-m-key { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
-.hc-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:1rem; }
-.tag {
-  background:rgba(74,158,255,.08);
-  border:1px solid rgba(74,158,255,.2);
-  color:var(--accent2); border-radius:4px;
-  font-size:.7rem; font-weight:600; padding:.18rem .55rem;
-}
-
 /* ═══════════════════════════════════════════
    SERVICES
 ═══════════════════════════════════════════ */
 .services-grid {
   display:grid; grid-template-columns:repeat(3,1fr);
   gap:1.6rem; margin-top:3rem;
+  align-items:stretch;
 }
 .svc-card {
   background:var(--surface); border:1px solid var(--border);
   border-radius:18px; padding:2rem; position:relative; overflow:hidden;
   transition:transform .3s,box-shadow .3s,border-color .3s;
+  display:flex; flex-direction:column;
 }
 .svc-card.featured {
   border-color:rgba(74,158,255,.5);
@@ -674,7 +624,7 @@ section.alt { background:var(--bg2); }
 .svc-price sup { font-size:1.4rem; vertical-align:top; margin-top:.5rem; font-family:'Inter',sans-serif; font-weight:700; }
 .svc-tier { font-size:.82rem; font-weight:600; color:var(--muted); margin-bottom:1.4rem; }
 .svc-desc { font-size:.9rem; font-weight:700; margin-bottom:.8rem; color:var(--text); }
-.svc-features { list-style:none; margin-bottom:1.8rem; }
+.svc-features { list-style:none; margin-bottom:1.8rem; flex:1; }
 .svc-features li {
   font-size:.84rem; color:var(--muted);
   padding:.4rem 0; border-bottom:1px solid var(--border);
@@ -687,6 +637,7 @@ section.alt { background:var(--bg2); }
   border:1px solid var(--border); border-radius:8px;
   padding:.7rem; font-size:.85rem; font-weight:700; color:var(--text);
   transition:background .3s,border-color .3s,transform .3s;
+  margin-top:auto;
 }
 .svc-cta:hover { background:rgba(74,158,255,.1); border-color:var(--accent2); transform:translateY(-2px); }
 .svc-card.featured .svc-cta {
@@ -695,6 +646,77 @@ section.alt { background:var(--bg2); }
   box-shadow:0 4px 16px rgba(74,158,255,.35);
 }
 .svc-card.featured .svc-cta:hover { opacity:.88; }
+
+/* ═══════════════════════════════════════════
+   BILLBOARD — "Let's Work Together" section
+═══════════════════════════════════════════ */
+.billboard-outer {
+  position: relative;
+  display: inline-block;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto 1.5rem;
+}
+/* Two support poles */
+.billboard-outer::after {
+  content: '';
+  position: absolute;
+  bottom: -52px; left: 50%;
+  transform: translateX(-50%);
+  width: 160px; height: 52px;
+  background: none;
+  border-left: 8px solid #444;
+  border-right: 8px solid #444;
+  border-bottom: 0;
+  border-top: 0;
+  pointer-events: none;
+}
+[data-theme="light"] .billboard-outer::after { border-color: #888; }
+.billboard-board {
+  position: relative;
+  border: 3px solid #555;
+  border-radius: 10px;
+  padding: 2rem 2.5rem;
+  background: var(--surface);
+  overflow: hidden;
+  transition: background var(--tr), border-color var(--tr);
+}
+[data-theme="dark"] .billboard-board {
+  border-color: rgba(0,212,255,.4);
+  box-shadow: 0 0 20px rgba(0,212,255,.1), inset 0 0 30px rgba(0,212,255,.04);
+}
+/* Bulb dots around the billboard border */
+.billboard-bulbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.bulb {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #888;
+  transition: background 1.4s ease, box-shadow 1.4s ease;
+}
+[data-theme="dark"] .bulb {
+  background: #ffe680;
+  box-shadow: 0 0 5px #ffe680, 0 0 10px #ffcc00;
+  animation: bulb-flicker 4s infinite;
+}
+[data-theme="dark"] .bulb:nth-child(2n)   { animation-delay: .7s; }
+[data-theme="dark"] .bulb:nth-child(3n)   { animation-delay: 1.3s; }
+[data-theme="dark"] .bulb:nth-child(4n)   { animation-delay: 2.1s; }
+[data-theme="dark"] .bulb:nth-child(5n)   { animation-delay: .4s; }
+@keyframes bulb-flicker {
+  0%,78%,100% { opacity:1; }
+  79%   { opacity:.2; }
+  79.5% { opacity:.8; }
+  80%   { opacity:.1; }
+  80.5% { opacity:1; }
+  82%   { opacity:.5; }
+  82.3% { opacity:1; }
+}
+.billboard-title-wrap { position: relative; z-index: 1; }
 
 /* ═══════════════════════════════════════════
    SKILLS
@@ -828,26 +850,17 @@ footer {
   position:relative; z-index:10;
   background:var(--bg2);
   border-top:1px solid var(--border);
-  padding:2.5rem 5%;
+  padding:1.5rem 5%;
 }
 .footer-inner {
   max-width:1120px; margin:0 auto;
   display:flex; align-items:center;
-  justify-content:space-between; flex-wrap:wrap; gap:1rem;
+  justify-content:center; flex-wrap:wrap; gap:.8rem;
 }
-.footer-logo {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.2rem; letter-spacing:.2em; color:var(--accent2);
-}
-[data-theme="light"] .footer-logo { color:var(--accent); }
-.footer-copy { font-size:.78rem; color:var(--muted); }
-.footer-nav { display:flex; gap:1.5rem; }
-.footer-nav a { font-size:.78rem; color:var(--muted); transition:color .3s; }
-.footer-nav a:hover { color:var(--accent2); }
+.footer-copy { font-size:.78rem; color:var(--muted); text-align:center; }
 
 /* ═══════════════════════════════════════════
    NEON SIGN SECTION (bottom)
-   Single blue neon color — #00d4ff only
 ═══════════════════════════════════════════ */
 .neon-section {
   position:relative; z-index:10;
@@ -863,7 +876,6 @@ footer {
   pointer-events:none;
 }
 
-/* Neon frame — single blue border */
 .neon-frame {
   display:inline-block;
   border:2px solid rgba(0,212,255,.5);
@@ -876,7 +888,6 @@ footer {
   animation:neon-frame-flicker 5s infinite;
 }
 
-/* Main sign text — SINGLE BLUE neon, no rainbow */
 .neon-sign {
   font-family:'Caveat',cursive;
   font-size:clamp(2.4rem,7vw,5rem);
@@ -893,7 +904,6 @@ footer {
   display:block; line-height:1.15;
 }
 
-/* Sub-line — same blue neon, slightly different animation phase */
 .neon-sub-sign {
   display:block;
   font-family:'Bebas Neue',sans-serif;
@@ -915,7 +925,6 @@ footer {
   text-transform:uppercase; color:rgba(255,255,255,.2);
 }
 
-/* Single-color flicker — main text */
 @keyframes neon-blue-flicker {
   0%,84%    { opacity:1; }
   84.6%     { opacity:.05; }
@@ -937,7 +946,6 @@ footer {
   100%      { opacity:1; }
 }
 
-/* Sub-line flicker — slightly offset */
 @keyframes neon-blue-sub {
   0%,86%    { opacity:1; }
   86.4%     { opacity:.1; }
@@ -949,7 +957,6 @@ footer {
   100%      { opacity:1; }
 }
 
-/* Frame flicker — same blue */
 @keyframes neon-frame-flicker {
   0%,84%  { border-color:rgba(0,212,255,.5); box-shadow:0 0 12px rgba(0,212,255,.25),0 0 32px rgba(0,212,255,.1),inset 0 0 20px rgba(0,212,255,.04); }
   85%     { border-color:rgba(0,212,255,.08); box-shadow:none; }
@@ -972,7 +979,7 @@ footer {
 ═══════════════════════════════════════════ */
 @media (max-width:1024px) {
   .services-grid { grid-template-columns:1fr 1fr; }
-  .services-grid .svc-card:last-child { grid-column:1/-1; max-width:480px; margin:0 auto; }
+  .services-grid .svc-card:last-child { grid-column:1/-1; max-width:480px; margin:0 auto; width:100%; }
   .what-grid { grid-template-columns:1fr; gap:2.5rem; }
   .reviews-grid { grid-template-columns:1fr 1fr; }
   .reviews-grid .review-card:last-child { grid-column:1/-1; max-width:480px; margin:0 auto; }
@@ -986,7 +993,7 @@ footer {
 @media (max-width:640px) {
   section { padding:4rem 0; }
   .services-grid { grid-template-columns:1fr; }
-  .services-grid .svc-card:last-child { max-width:100%; }
+  .services-grid .svc-card { max-width:100% !important; }
   .reviews-grid { grid-template-columns:1fr; }
   .reviews-grid .review-card:last-child { max-width:100%; }
   .neon-frame { padding:1.6rem 1.8rem; }
@@ -995,6 +1002,8 @@ footer {
   .ufo-body { width:62px; height:24px; }
   .ufo-dome { width:32px; height:22px; top:-20px; }
   .footer-inner { flex-direction:column; text-align:center; align-items:center; }
+  .billboard-outer::after { display:none; }
+  .billboard-board { padding:1.4rem 1.5rem; }
 }
 @media (max-width:400px) {
   .hero h1 { font-size:2.6rem; }
@@ -1008,465 +1017,34 @@ footer {
 <!-- ─── STARS + SHOOTING STARS CANVAS ─── -->
 <canvas id="sky-canvas"></canvas>
 
-<!-- ─── CITY / ENVIRONMENT SCENE ─── -->
+<!-- ─── PINE FOREST / MOUNTAIN LANDSCAPE SCENE ─── -->
 <div class="scene-bg">
-<svg viewBox="0 0 1440 310" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- BUILDINGS left zone -->
-  <rect class="sb"  x="0"   y="225" width="52"  height="85"/>
-  <rect class="sb2" x="3"   y="218" width="46"  height="12" rx="3"/>
-  <rect class="win-w"   x="10"  y="235" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="30"  y="235" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="10"  y="252" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="30"  y="252" width="12" height="10" rx="1"/>
-  <rect class="sb2" x="58"  y="213" width="58"  height="97"/>
-  <rect class="sb"  x="61"  y="206" width="52"  height="12" rx="3"/>
-  <rect class="win-w"   x="67"  y="222" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="85"  y="222" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="103" y="222" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="67"  y="237" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="85"  y="237" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="103" y="237" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="67"  y="252" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="85"  y="252" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="103" y="252" width="11" height="9" rx="1"/>
-  <!-- Taller block -->
-  <rect class="sb"  x="125" y="148" width="68"  height="162"/>
-  <rect class="sb2" x="127" y="140" width="64"  height="14" rx="2"/>
-  <rect class="win-d"   x="135" y="158" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="153" y="158" width="11" height="10" rx="1"/>
-  <rect class="win-off" x="171" y="158" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="135" y="175" width="11" height="10" rx="1"/>
-  <rect class="win-off" x="153" y="175" width="11" height="10" rx="1"/>
-  <rect class="win-d"   x="171" y="175" width="11" height="10" rx="1"/>
-  <rect class="win-d"   x="135" y="193" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="153" y="193" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="171" y="193" width="11" height="10" rx="1"/>
-  <rect class="win-off" x="135" y="210" width="11" height="10" rx="1"/>
-  <rect class="win-d"   x="153" y="210" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="171" y="210" width="11" height="10" rx="1"/>
-  <rect class="win-w"   x="135" y="227" width="11" height="10" rx="1"/>
-  <rect class="win-off" x="153" y="227" width="11" height="10" rx="1"/>
-  <rect class="win-d"   x="171" y="227" width="11" height="10" rx="1"/>
-  <!-- Slim office tower -->
-  <rect class="sb2" x="202" y="100" width="60"  height="210"/>
-  <rect class="sb"  x="205" y="92"  width="54"  height="14" rx="2"/>
-  <rect class="sb2" x="218" y="80"  width="28"  height="20" rx="3"/>
-  <line x1="232" y1="80" x2="232" y2="62" stroke="#1a2a3a" stroke-width="2.5"/>
-  <rect class="win-w"   x="211" y="110" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="243" y="110" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="211" y="124" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="243" y="124" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="211" y="138" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="243" y="138" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="211" y="152" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="243" y="152" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="211" y="166" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="243" y="166" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="211" y="180" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="243" y="180" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="211" y="194" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="243" y="194" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="211" y="208" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="243" y="208" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="211" y="222" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="243" y="222" width="10" height="8" rx="1"/>
-  <!-- Medium block -->
-  <rect class="sb"  x="272" y="172" width="70"  height="138"/>
-  <rect class="sb2" x="275" y="164" width="64"  height="14" rx="2"/>
-  <rect class="win-d"   x="283" y="182" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="302" y="182" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="320" y="182" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="283" y="198" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="302" y="198" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="320" y="198" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="283" y="214" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="302" y="214" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="320" y="214" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="283" y="230" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="302" y="230" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="320" y="230" width="12" height="10" rx="1"/>
-  <!-- Wide center-left building -->
-  <rect class="sb2" x="350" y="125" width="95"  height="185"/>
-  <rect class="sb"  x="353" y="116" width="89"  height="16" rx="3"/>
-  <rect class="win-w"   x="360" y="135" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="385" y="135" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="410" y="135" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="360" y="151" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="385" y="151" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="410" y="151" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="360" y="167" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="385" y="167" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="410" y="167" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="360" y="183" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="385" y="183" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="410" y="183" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="360" y="199" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="385" y="199" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="410" y="199" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="360" y="215" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="385" y="215" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="410" y="215" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="360" y="231" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="385" y="231" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="410" y="231" width="12" height="10" rx="1"/>
-  <!-- TALLEST building (landmark) -->
-  <rect class="sb"  x="455" y="72"  width="72"  height="238"/>
-  <rect class="sb2" x="459" y="62"  width="64"  height="16" rx="2"/>
-  <rect class="sb"  x="472" y="48"  width="38"  height="20" rx="3"/>
-  <line x1="491" y1="48" x2="491" y2="28" stroke="#1a2a3a" stroke-width="3"/>
-  <rect class="win-w"   x="464" y="82"  width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="500" y="82"  width="11" height="9" rx="1"/>
-  <rect class="win-off" x="464" y="97"  width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="500" y="97"  width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="464" y="112" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="500" y="112" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="464" y="127" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="500" y="127" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="464" y="142" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="500" y="142" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="464" y="157" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="500" y="157" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="464" y="172" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="500" y="172" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="464" y="187" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="500" y="187" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="464" y="202" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="500" y="202" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="464" y="217" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="500" y="217" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="464" y="232" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="500" y="232" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="464" y="247" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="500" y="247" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="464" y="262" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="500" y="262" width="11" height="9" rx="1"/>
-  <!-- Right-center block -->
-  <rect class="sb2" x="538" y="148" width="62"  height="162"/>
-  <rect class="sb"  x="541" y="140" width="56"  height="14" rx="2"/>
-  <rect class="win-d"   x="549" y="158" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="566" y="158" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="582" y="158" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="549" y="173" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="566" y="173" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="582" y="173" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="549" y="188" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="566" y="188" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="582" y="188" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="549" y="203" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="566" y="203" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="582" y="203" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="549" y="218" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="566" y="218" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="582" y="218" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="549" y="233" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="566" y="233" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="582" y="233" width="10" height="9" rx="1"/>
-  <!-- Shorter block with detail -->
-  <rect class="sb"  x="612" y="170" width="75"  height="140"/>
-  <rect class="sb2" x="615" y="162" width="69"  height="14" rx="2"/>
-  <rect class="win-w"   x="622" y="180" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="642" y="180" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="662" y="180" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="622" y="196" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="642" y="196" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="662" y="196" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="622" y="212" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="642" y="212" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="662" y="212" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="622" y="228" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="642" y="228" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="662" y="228" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="622" y="244" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="642" y="244" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="662" y="244" width="12" height="10" rx="1"/>
-  <!-- Right zone tall -->
-  <rect class="sb2" x="700" y="118" width="68"  height="192"/>
-  <rect class="sb"  x="703" y="109" width="62"  height="15" rx="2"/>
-  <rect class="win-d"   x="711" y="128" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="730" y="128" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="748" y="128" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="711" y="143" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="730" y="143" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="748" y="143" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="711" y="158" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="730" y="158" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="748" y="158" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="711" y="173" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="730" y="173" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="748" y="173" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="711" y="188" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="730" y="188" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="748" y="188" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="711" y="203" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="730" y="203" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="748" y="203" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="711" y="218" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="730" y="218" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="748" y="218" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="711" y="233" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="730" y="233" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="748" y="233" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="711" y="248" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="730" y="248" width="11" height="9" rx="1"/>
-  <rect class="win-off" x="748" y="248" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="711" y="263" width="11" height="9" rx="1"/>
-  <rect class="win-d"   x="730" y="263" width="11" height="9" rx="1"/>
-  <rect class="win-w"   x="748" y="263" width="11" height="9" rx="1"/>
-  <!-- Thin tall tower right -->
-  <rect class="sb"  x="780" y="82"  width="52"  height="228"/>
-  <rect class="sb2" x="783" y="74"  width="46"  height="14" rx="2"/>
-  <rect class="sb"  x="793" y="62"  width="26"  height="18" rx="3"/>
-  <line x1="806" y1="62" x2="806" y2="44" stroke="#1a2a3a" stroke-width="2.5"/>
-  <rect class="win-w"   x="787" y="92"  width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="804" y="92"  width="10" height="8" rx="1"/>
-  <rect class="win-off" x="787" y="106" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="804" y="106" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="787" y="120" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="804" y="120" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="787" y="134" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="804" y="134" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="787" y="148" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="804" y="148" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="787" y="162" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="804" y="162" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="787" y="176" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="804" y="176" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="787" y="190" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="804" y="190" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="787" y="204" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="804" y="204" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="787" y="218" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="804" y="218" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="787" y="232" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="804" y="232" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="787" y="246" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="804" y="246" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="787" y="260" width="10" height="8" rx="1"/>
-  <rect class="win-d"   x="804" y="260" width="10" height="8" rx="1"/>
-  <rect class="win-w"   x="787" y="274" width="10" height="8" rx="1"/>
-  <rect class="win-off" x="804" y="274" width="10" height="8" rx="1"/>
-  <!-- Right zone medium block -->
-  <rect class="sb2" x="842" y="145" width="88"  height="165"/>
-  <rect class="sb"  x="845" y="136" width="82"  height="15" rx="2"/>
-  <rect class="win-w"   x="852" y="155" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="872" y="155" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="892" y="155" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="912" y="155" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="852" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="872" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="892" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="912" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="852" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="872" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="892" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="912" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="852" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="872" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="892" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="912" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="852" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="872" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="892" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="912" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="852" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="872" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="892" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="912" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="852" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="872" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="892" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="912" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="852" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="872" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="892" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="912" y="267" width="12" height="10" rx="1"/>
-  <!-- Far right buildings -->
-  <rect class="sb"  x="1000" y="108" width="65" height="202"/>
-  <rect class="sb2" x="1003" y="99"  width="59" height="15" rx="2"/>
-  <rect class="win-w"   x="1010" y="118" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1028" y="118" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1046" y="118" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1010" y="133" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1028" y="133" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="133" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1010" y="148" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1028" y="148" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="148" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1010" y="163" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1028" y="163" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1046" y="163" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1010" y="178" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1028" y="178" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1046" y="178" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1010" y="193" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1028" y="193" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="193" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1010" y="208" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1028" y="208" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1046" y="208" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1010" y="223" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1028" y="223" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="223" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1010" y="238" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1028" y="238" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1046" y="238" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1010" y="253" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1028" y="253" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1046" y="253" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1010" y="268" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1028" y="268" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="268" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1010" y="283" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1028" y="283" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1046" y="283" width="10" height="9" rx="1"/>
-  <rect class="sb2" x="1075" y="162" width="82"  height="148"/>
-  <rect class="sb"  x="1078" y="153" width="76"  height="15" rx="2"/>
-  <rect class="win-d"   x="1085" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1106" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1127" y="171" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1085" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1106" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1127" y="187" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1085" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1106" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1127" y="203" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1085" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1106" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1127" y="219" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1085" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1106" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1127" y="235" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1085" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1106" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1127" y="251" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1085" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1106" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1127" y="267" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1085" y="283" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1106" y="283" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1127" y="283" width="12" height="10" rx="1"/>
-  <!-- Far right end -->
-  <rect class="sb"  x="1210" y="128" width="90"  height="182"/>
-  <rect class="sb2" x="1213" y="119" width="84"  height="15" rx="2"/>
-  <rect class="win-d"   x="1220" y="137" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1242" y="137" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1264" y="137" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="137" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1220" y="153" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1242" y="153" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1264" y="153" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1286" y="153" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1220" y="169" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1242" y="169" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1264" y="169" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="169" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1220" y="185" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1242" y="185" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1264" y="185" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="185" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1220" y="201" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1242" y="201" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1264" y="201" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="201" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1220" y="217" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1242" y="217" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1264" y="217" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="217" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1220" y="233" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1242" y="233" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1264" y="233" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1286" y="233" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1220" y="249" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1242" y="249" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1264" y="249" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1286" y="249" width="12" height="10" rx="1"/>
-  <rect class="win-w"   x="1220" y="265" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1242" y="265" width="12" height="10" rx="1"/>
-  <rect class="win-off" x="1264" y="265" width="12" height="10" rx="1"/>
-  <rect class="win-d"   x="1286" y="265" width="12" height="10" rx="1"/>
-  <rect class="sb2" x="1313" y="186" width="55"  height="124"/>
-  <rect class="sb"  x="1316" y="178" width="49"  height="14" rx="2"/>
-  <rect class="win-w"   x="1323" y="196" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1340" y="196" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1323" y="211" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1340" y="211" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1323" y="226" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1340" y="226" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1323" y="241" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1340" y="241" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1323" y="256" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1340" y="256" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1323" y="271" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1340" y="271" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1323" y="286" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1340" y="286" width="10" height="9" rx="1"/>
-  <rect class="sb"  x="1380" y="155" width="60"  height="155"/>
-  <rect class="sb2" x="1383" y="146" width="54"  height="15" rx="2"/>
-  <rect class="win-d"   x="1390" y="164" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1408" y="164" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1390" y="179" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1408" y="179" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1390" y="194" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1408" y="194" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1390" y="209" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1408" y="209" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1390" y="224" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1408" y="224" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1390" y="239" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1408" y="239" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1390" y="254" width="10" height="9" rx="1"/>
-  <rect class="win-off" x="1408" y="254" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1390" y="269" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1408" y="269" width="10" height="9" rx="1"/>
-  <rect class="win-w"   x="1390" y="284" width="10" height="9" rx="1"/>
-  <rect class="win-d"   x="1408" y="284" width="10" height="9" rx="1"/>
+<svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="daySkySvg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#87ceeb"/>
+      <stop offset="55%"  stop-color="#b8e0f7"/>
+      <stop offset="100%" stop-color="#d4f0c4"/>
+    </linearGradient>
+  </defs>
+  <!-- Day sky fill — fades in day mode via class -->
+  <rect class="land-sky" x="0" y="0" width="1440" height="320" fill="url(#daySkySvg)"/>
 
-  <!-- TREES -->
-  <rect class="tree-body" x="324" y="240" width="7"  height="70"/>
-  <ellipse class="tree-top" cx="327" cy="230" rx="16" ry="22"/>
-  <ellipse class="tree-top" cx="320" cy="242" rx="12" ry="16"/>
-  <ellipse class="tree-top" cx="335" cy="240" rx="12" ry="15"/>
+  <!-- Distant mountains layer 1 (furthest) -->
+  <polygon class="land-mountain" points="0,220 80,120 180,200 280,90 390,190 500,70 600,180 700,100 800,190 900,80 1000,175 1100,95 1200,185 1310,110 1440,200 1440,320 0,320"/>
+  <!-- Distant mountains layer 2 -->
+  <polygon class="land-mountain2" points="0,240 60,170 140,230 240,155 350,225 440,148 560,230 660,160 760,230 870,155 970,230 1070,162 1170,238 1280,158 1380,235 1440,220 1440,320 0,320"/>
 
-  <rect class="tree-body" x="640" y="235" width="7"  height="75"/>
-  <ellipse class="tree-top" cx="643" cy="225" rx="18" ry="24"/>
-  <ellipse class="tree-top" cx="634" cy="238" rx="13" ry="17"/>
-  <ellipse class="tree-top" cx="653" cy="236" rx="12" ry="16"/>
+  <!-- Far forest silhouette — random pine shapes -->
+  <polygon class="land-forest-far" points="0,320 0,250 20,255 25,220 30,255 50,258 55,215 65,258 75,260 80,222 88,260 100,262 105,218 115,262 125,264 130,220 140,264 155,266 160,225 170,266 185,268 190,228 200,268 215,270 220,232 230,270 248,272 252,230 262,272 278,272 282,235 290,272 310,274 315,235 325,274 345,276 348,240 358,276 378,278 382,245 395,278 415,280 418,248 428,280 450,280 455,250 465,280 485,282 490,252 500,282 520,282 525,255 535,282 558,282 562,258 572,282 596,282 600,260 610,282 632,282 638,262 648,282 670,284 674,265 684,284 708,284 712,268 722,284 748,284 752,270 762,284 788,284 792,274 802,284 828,284 830,276 840,284 1440,284 1440,320"/>
 
-  <rect class="tree-body" x="968" y="240" width="7"  height="70"/>
-  <polygon class="tree-top" points="971,192 951,258 991,258"/>
-  <polygon class="tree-top" points="971,208 956,265 986,265"/>
+  <!-- Near forest — tall sharp pines -->
+  <polygon class="land-forest-near" points="0,320 0,268 15,272 18,248 22,272 35,275 38,244 44,275 55,278 58,245 65,278 80,280 84,246 90,280 105,282 108,248 116,282 130,284 134,250 142,284 160,286 164,252 172,286 190,288 194,254 202,288 222,290 226,256 234,290 256,290 260,258 268,290 292,292 296,260 304,292 328,292 332,262 340,292 366,294 370,264 378,294 406,294 410,268 418,294 446,294 450,272 458,294 488,294 492,274 500,294 532,294 536,278 544,294 578,294 582,280 590,294 625,294 630,282 638,294 674,296 678,284 686,296 724,296 728,286 736,296 775,296 780,288 788,296 830,296 834,290 842,296 884,296 888,292 896,296 940,296 944,292 952,296 998,296 1002,292 1010,296 1058,296 1062,292 1070,296 1120,298 1124,292 1132,298 1184,298 1188,295 1196,298 1250,298 1254,296 1262,298 1318,298 1322,296 1330,298 1390,300 1394,298 1402,300 1440,300 1440,320"/>
 
-  <rect class="tree-body" x="1170" y="238" width="7"  height="72"/>
-  <ellipse class="tree-top" cx="1173" cy="228" rx="17" ry="22"/>
-  <ellipse class="tree-top" cx="1163" cy="240" rx="12" ry="16"/>
-  <ellipse class="tree-top" cx="1184" cy="238" rx="13" ry="17"/>
-
-  <!-- STREET LAMPS -->
-  <rect class="lamp-pole" x="318" y="230" width="3"  height="80"/>
-  <rect class="lamp-pole" x="310" y="230" width="14" height="3" rx="1.5"/>
-  <ellipse class="lamp-glow" cx="317" cy="229" rx="12" ry="8" opacity="0.6"/>
-  <circle  class="lamp-top"  cx="317" cy="231" r="3"/>
-
-  <rect class="lamp-pole" x="653" y="228" width="3"  height="82"/>
-  <rect class="lamp-pole" x="645" y="228" width="14" height="3" rx="1.5"/>
-  <ellipse class="lamp-glow" cx="652" cy="227" rx="12" ry="8" opacity="0.6"/>
-  <circle  class="lamp-top"  cx="652" cy="229" r="3"/>
-
-  <rect class="lamp-pole" x="983" y="232" width="3"  height="78"/>
-  <rect class="lamp-pole" x="975" y="232" width="14" height="3" rx="1.5"/>
-  <ellipse class="lamp-glow" cx="982" cy="231" rx="12" ry="8" opacity="0.6"/>
-  <circle  class="lamp-top"  cx="982" cy="233" r="3"/>
-
-  <rect class="lamp-pole" x="1186" y="230" width="3"  height="80"/>
-  <rect class="lamp-pole" x="1178" y="230" width="14" height="3" rx="1.5"/>
-  <ellipse class="lamp-glow" cx="1185" cy="229" rx="12" ry="8" opacity="0.6"/>
-  <circle  class="lamp-top"  cx="1185" cy="231" r="3"/>
-
-  <!-- GROUND -->
-  <rect class="sg" x="0" y="297" width="1440" height="13"/>
+  <!-- Ground -->
+  <rect class="land-ground" x="0" y="304" width="1440" height="16"/>
 </svg>
 </div>
-
 <!-- ─── MOON & SUN ─── -->
 <div class="moon"></div>
 <div class="sun"></div>
@@ -1499,7 +1077,10 @@ footer {
 
 <!-- ─── NAVBAR ─── -->
 <nav id="navbar">
-  <div class="nav-logo">JAY FREELANCER SERVICES</div>
+  <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0;">
+    <div class="nav-logo">JAY FREELANCER SERVICES</div>
+    <span class="nav-mode-text" id="navModeText">Night Mode</span>
+  </div>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -1508,10 +1089,8 @@ footer {
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <button class="mode-pill" id="modeToggle" aria-label="Toggle day/night mode">
-      <span class="mode-icon" id="modeIcon">🌙</span>
-      <span class="mode-label" id="modeLabel">Night Mode</span>
-      <div class="mode-switch"><div class="mode-thumb"></div></div>
+    <button class="mode-toggle-btn" id="modeToggle" aria-label="Toggle day/night mode">
+      <span id="modeIcon">🌙</span>
     </button>
     <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank" class="nav-cta">Hire Me on Upwork</a>
   </div>
@@ -1552,32 +1131,6 @@ footer {
         <div class="hero-stats">
           <div class="hs"><span class="hs-num">100%</span><span class="hs-lbl">Job Success</span></div>
           <div class="hs"><span class="hs-num">$20K+</span><span class="hs-lbl">Total Earned</span></div>
-        </div>
-      </div>
-      <div class="hero-card reveal">
-        <div class="hc-top">
-          <div class="hc-avatar">👨‍💻</div>
-          <div>
-            <div class="hc-name">Jay — Front-End Developer</div>
-            <div class="hc-loc">📍 Santo Domingo, Dominican Republic</div>
-          </div>
-          <div class="hc-badge">Top Rated</div>
-        </div>
-        <div class="hc-metrics">
-          <div class="hc-m"><div class="hc-m-val">100%</div><div class="hc-m-key">Job Success</div></div>
-          <div class="hc-m"><div class="hc-m-val">$20K+</div><div class="hc-m-key">Total Earned</div></div>
-          <div class="hc-m"><div class="hc-m-val">0–4 hrs</div><div class="hc-m-key">Avg. Response</div></div>
-          <div class="hc-m"><div class="hc-m-val">EN / ES</div><div class="hc-m-key">Bilingual</div></div>
-        </div>
-        <div class="hc-tags">
-          <span class="tag">React</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">HTML/CSS</span>
-          <span class="tag">HubSpot</span>
-          <span class="tag">Power Automate</span>
-          <span class="tag">Meta Ads</span>
-          <span class="tag">IT Systems</span>
-          <span class="tag">Bilingual EN/ES</span>
         </div>
       </div>
     </div>
@@ -1811,17 +1364,6 @@ footer {
           </div>
         </div>
       </div>
-      <div class="review-card reveal">
-        <div class="review-stars">★★★★</div>
-        <p class="review-text">"Completed the project as expected. Delivered within the agreed timeline and maintained clear communication throughout. Professional and responsive — would hire again for bilingual support work."</p>
-        <div class="reviewer">
-          <div class="rev-avatar">BS</div>
-          <div>
-            <div class="rev-name">Bruno S.</div>
-            <div class="rev-job">Client · Aug 2024</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1830,10 +1372,26 @@ footer {
 <section class="alt" id="contact">
   <div class="container">
     <div class="contact-box reveal">
-      <span class="section-label">Let's Work Together</span>
-      <h2 class="section-title">Ready to Build<br/>Something Great?</h2>
-      <div class="section-line" style="margin:1rem auto 1.5rem;"></div>
-      <p>Are your internal systems slowing you down? Need a clean, fast, and responsive website? I bring together front-end development, IT systems architecture, and digital marketing to give you real, measurable results. Let's talk.</p>
+
+      <!-- BILLBOARD wrapper -->
+      <div class="billboard-outer">
+        <div class="billboard-board">
+          <!-- Bulb dots — 6 per side -->
+          <div class="billboard-bulbs" id="billboardBulbs"></div>
+          <div class="billboard-title-wrap">
+            <span class="section-label">Let's Work Together</span>
+            <h2 class="section-title">Ready to Build<br/>Something Great?</h2>
+            <div class="section-line" style="margin:1rem auto 0;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Billboard support poles via inline SVG for better mobile control -->
+      <svg style="display:block;margin:0 auto;overflow:visible;width:180px;height:52px;flex-shrink:0;" viewBox="0 0 180 52" xmlns="http://www.w3.org/2000/svg">
+        <rect x="52" y="0" width="8" height="52" rx="3" fill="#555"/>
+        <rect x="120" y="0" width="8" height="52" rx="3" fill="#555"/>
+      </svg>
+
+      <p style="margin-top:1.5rem;">Are your internal systems slowing you down? Need a clean, fast, and responsive website? I bring together front-end development, IT systems architecture, and digital marketing to give you real, measurable results. Let's talk.</p>
       <div class="contact-links">
         <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank" class="c-link">
           <span class="c-icon">💼</span> Hire me on Upwork
@@ -1851,60 +1409,40 @@ footer {
 <!-- ─── FOOTER ─── -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">JAY FREELANCER SERVICES</div>
     <p class="footer-copy">© 2026 Jay Freelancer Services · Front-End Developer & IT Systems Specialist</p>
-    <nav class="footer-nav">
-      <a href="#services">Services</a>
-      <a href="#skills">Skills</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#contact">Contact</a>
-    </nav>
   </div>
 </footer>
 
-<!-- ─── NEON SIGN (single blue neon) ─── -->
-<div class="neon-section">
-  <div class="neon-frame">
-    <span class="neon-sign">
-      Let's Build<br/>Something Great
-    </span>
-    <span class="neon-sub-sign">✦ Open for Projects ✦</span>
-  </div>
-  <p class="neon-tagline">Fast delivery · Clean code · Real results</p>
-</div>
-
 <!-- ═══════════════════════════════════════════
      JAVASCRIPT
-     ⚠️ FIX: heroNameEl and originalText are declared
-     BEFORE applyTheme() is called to avoid
-     ReferenceError (temporal dead zone for const).
-     This was the root cause of ALL broken behavior.
 ═══════════════════════════════════════════ -->
 <script>
 /* ────────────────────────────────────────
-   DECLARE SHARED REFS FIRST — must come before
-   any function that uses them is called
+   SHARED REFS — declared before any function uses them
 ──────────────────────────────────────── */
-const html        = document.documentElement;
-const modeToggle  = document.getElementById('modeToggle');
-const modeIcon    = document.getElementById('modeIcon');
-const modeLabel   = document.getElementById('modeLabel');
-const heroNameEl  = document.getElementById('heroName');   // ← MOVED UP
-const ORIGINAL_TEXT = 'Jay Freelancer Services';           // ← MOVED UP
+const html           = document.documentElement;
+const modeToggle     = document.getElementById('modeToggle');
+const modeIcon       = document.getElementById('modeIcon');
+const navModeText    = document.getElementById('navModeText');
+const heroNameEl     = document.getElementById('heroName');
+const ORIGINAL_TEXT  = 'Jay Freelancer Services';
+
+/* ⚠️ FIX: Variables del OVNI movidas al inicio para evitar el ReferenceError (TDZ) */
+const ufoWrap        = document.getElementById('ufoWrap');
+let ufoTimeout       = null;
+let ufoRunning       = false;
+
 
 /* ────────────────────────────────────────
-   1. NEON NAME — split into letter spans in dark mode
-   Each letter gets a random --dur and --delay
-   so they flicker independently like a faulty neon tube.
-   Light mode: restore plain text, zero glow.
+   1. NEON NAME — flicker on dark, plain on light
 ──────────────────────────────────────── */
 function initNeonName() {
   const isDark = html.getAttribute('data-theme') === 'dark';
   if (isDark) {
     const markup = [...ORIGINAL_TEXT].map(char => {
       if (char === ' ') return '<span class="nl-space"> </span>';
-      const dur   = (5 + Math.random() * 7).toFixed(2) + 's';
-      const delay = (Math.random() * 8).toFixed(2) + 's';
+      const dur   = (8 + Math.random() * 9).toFixed(2) + 's';
+      const delay = (Math.random() * 10).toFixed(2) + 's';
       return `<span class="nl" style="--dur:${dur};--delay:${delay}">${char}</span>`;
     }).join('');
     heroNameEl.innerHTML = markup;
@@ -1914,39 +1452,88 @@ function initNeonName() {
 }
 
 /* ────────────────────────────────────────
-   2. DAY / NIGHT — auto-detect + manual toggle
-   Day  = 06:00 – 17:59 → light
-   Night = 18:00 – 05:59 → dark
+   2. BILLBOARD BULBS — build dots in JS
+──────────────────────────────────────── */
+function buildBillboardBulbs() {
+  const wrap = document.getElementById('billboardBulbs');
+  if (!wrap) return;
+  const board = wrap.parentElement;
+  const W = board.offsetWidth;
+  const H = board.offsetHeight;
+  const gap = 36;
+  wrap.innerHTML = '';
+  // Top row
+  for (let x = 14; x < W - 14; x += gap) {
+    const b = document.createElement('div');
+    b.className = 'bulb';
+    b.style.top = '8px'; b.style.left = x + 'px';
+    wrap.appendChild(b);
+  }
+  // Bottom row
+  for (let x = 14; x < W - 14; x += gap) {
+    const b = document.createElement('div');
+    b.className = 'bulb';
+    b.style.bottom = '8px'; b.style.left = x + 'px';
+    wrap.appendChild(b);
+  }
+  // Left col
+  for (let y = 28; y < H - 28; y += gap) {
+    const b = document.createElement('div');
+    b.className = 'bulb';
+    b.style.top = y + 'px'; b.style.left = '8px';
+    wrap.appendChild(b);
+  }
+  // Right col
+  for (let y = 28; y < H - 28; y += gap) {
+    const b = document.createElement('div');
+    b.className = 'bulb';
+    b.style.top = y + 'px'; b.style.right = '8px';
+    wrap.appendChild(b);
+  }
+}
+window.addEventListener('load', buildBillboardBulbs);
+
+/* ────────────────────────────────────────
+   3. DAY / NIGHT THEME
 ──────────────────────────────────────── */
 function getAutoTheme() {
   const h = new Date().getHours();
   return (h >= 6 && h < 18) ? 'light' : 'dark';
 }
 
-function applyTheme(theme) {
+let ufoAllowedNextToggle = false; 
+
+function applyTheme(theme, isManualToggle) {
   html.setAttribute('data-theme', theme);
+
   if (theme === 'dark') {
-    modeIcon.textContent  = '🌙';
-    modeLabel.textContent = 'Night Mode';
+    modeIcon.textContent  = '☀️'; 
+    if (navModeText) navModeText.textContent = 'Night Mode';
+    if (isManualToggle || ufoAllowedNextToggle) {
+      ufoAllowedNextToggle = false;
+      scheduleUFOForDark();
+    }
   } else {
-    modeIcon.textContent  = '☀️';
-    modeLabel.textContent = 'Day Mode';
+    modeIcon.textContent  = '🌙'; 
+    if (navModeText) navModeText.textContent = 'Day Mode';
+    ufoAllowedNextToggle = true; 
+    resetUFO();
   }
-  initNeonName(); // safe now — heroNameEl already declared above
+  initNeonName();
 }
 
 // Auto-detect on load
-applyTheme(getAutoTheme());
+applyTheme(getAutoTheme(), false);
+ufoAllowedNextToggle = true; 
 
 // Manual override
 modeToggle.addEventListener('click', () => {
-  applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  applyTheme(newTheme, true);
 });
 
 /* ────────────────────────────────────────
-   3. STARS + 2 SHOOTING STARS CANVAS
-   - Two stars per spawn cycle, staggered 150–550ms apart
-   - UFO triggered 3s after the FIRST pair ever appears
+   4. STARS + SHOOTING STARS CANVAS
 ──────────────────────────────────────── */
 const canvas = document.getElementById('sky-canvas');
 const ctx    = canvas.getContext('2d');
@@ -1974,7 +1561,6 @@ function buildStars() {
   }
 }
 
-// Shooting star factory — angle ~45° diagonal with slight variance
 function spawnShooter(xOffset = 0, yOffset = 0) {
   const sx = Math.random() * W * 0.65 + xOffset;
   const sy = Math.random() * H * 0.35 + yOffset;
@@ -1990,16 +1576,12 @@ function spawnShooter(xOffset = 0, yOffset = 0) {
   };
 }
 
-// UFO state
-let firstShootSeen = false;
-let ufoTriggered   = false;
 let lastShoot      = 0;
 let nextShootDelay = 4500 + Math.random() * 3000;
 
 function tick(ts) {
   ctx.clearRect(0, 0, W, H);
 
-  // Twinkling stars
   for (const s of stars) {
     s.a += s.speed * s.dir;
     if (s.a >= 1 || s.a <= 0) s.dir *= -1;
@@ -2011,24 +1593,14 @@ function tick(ts) {
   }
   ctx.globalAlpha = 1;
 
-  // Spawn 2 shooting stars per cycle with a stagger
   if (ts - lastShoot > nextShootDelay) {
-    shooters.push(spawnShooter());                     // star 1 immediately
+    shooters.push(spawnShooter());
     const stagger = 150 + Math.random() * 400;
-    setTimeout(() => {
-      shooters.push(spawnShooter(W * 0.05, -15));     // star 2 slightly offset
-    }, stagger);
-
-    // UFO: trigger 3s after the first ever pair
-    if (!firstShootSeen) {
-      firstShootSeen = true;
-      setTimeout(triggerUFO, 3000);
-    }
+    setTimeout(() => { shooters.push(spawnShooter(W * 0.05, -15)); }, stagger);
     lastShoot      = ts;
     nextShootDelay = 5000 + Math.random() * 5000;
   }
 
-  // Draw shooting stars — gradient tail + bright head dot
   for (const sh of shooters) {
     if (sh.dead) continue;
     const dx = Math.cos(sh.angle) * sh.speed;
@@ -2050,7 +1622,6 @@ function tick(ts) {
     ctx.stroke();
     ctx.globalAlpha = 1;
 
-    // Head glow dot
     ctx.beginPath();
     ctx.arc(sh.x, sh.y, 2.2, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255,255,255,${sh.life})`;
@@ -2070,32 +1641,64 @@ resize();
 requestAnimationFrame(tick);
 
 /* ────────────────────────────────────────
-   4. UFO ENTRANCE — starts invisible,
-   appears 3s after first shooting star,
-   grows from tiny (scale 0.03) sweeping
-   across the hero title (z-index 500),
-   then enters gentle drift loop.
+   5. UFO FUNCTIONS
 ──────────────────────────────────────── */
-const ufoWrap = document.getElementById('ufoWrap');
+function resetUFO() {
+  if (ufoTimeout) { clearTimeout(ufoTimeout); ufoTimeout = null; }
+  ufoRunning = false;
+  ufoWrap.className = 'ufo-wrap';
+  ufoWrap.style.opacity = '0';
+}
+
+function scheduleUFOForDark() {
+  if (ufoTimeout) clearTimeout(ufoTimeout);
+  ufoTimeout = setTimeout(() => {
+    if (html.getAttribute('data-theme') !== 'dark') return;
+    triggerUFO();
+  }, 6000);
+}
 
 function triggerUFO() {
-  if (ufoTriggered) return;
-  ufoTriggered = true;
-
-  // Only show UFO in dark/night mode
-  if (html.getAttribute('data-theme') !== 'dark') return;
+  if (ufoRunning) return;
+  ufoRunning = true;
+  ufoWrap.style.opacity = '';
 
   ufoWrap.classList.add('ufo-entering');
-  ufoWrap.addEventListener('animationend', () => {
-    if (ufoWrap.classList.contains('ufo-entering')) {
-      ufoWrap.classList.remove('ufo-entering');
-      ufoWrap.classList.add('ufo-drifting');
+
+  ufoWrap.addEventListener('animationend', function onEntered() {
+    if (!ufoWrap.classList.contains('ufo-entering')) return;
+    ufoWrap.removeEventListener('animationend', onEntered);
+    ufoWrap.classList.remove('ufo-entering');
+    ufoWrap.classList.add('ufo-drifting');
+
+    const svcBtn = document.querySelector('a[href="#services"].btn-primary');
+    if (svcBtn) {
+      svcBtn.classList.add('btn-ufo-lit');
+      setTimeout(() => {
+        if (svcBtn) svcBtn.classList.remove('btn-ufo-lit');
+        ufoLeave();
+      }, 5000);
+    } else {
+      setTimeout(ufoLeave, 5000);
     }
   }, { once: true });
 }
 
+function ufoLeave() {
+  ufoWrap.classList.remove('ufo-drifting');
+  ufoWrap.classList.add('ufo-leaving');
+  ufoWrap.addEventListener('animationend', function onLeft() {
+    if (!ufoWrap.classList.contains('ufo-leaving')) return;
+    ufoWrap.removeEventListener('animationend', onLeft);
+    ufoWrap.className = 'ufo-wrap';
+    ufoWrap.style.opacity = '0';
+    ufoRunning = false;
+    ufoAllowedNextToggle = true; 
+  }, { once: true });
+}
+
 /* ────────────────────────────────────────
-   5. HAMBURGER MENU
+   6. HAMBURGER MENU
 ──────────────────────────────────────── */
 const hamburger  = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -2111,7 +1714,7 @@ function closeMobile() {
 }
 
 /* ────────────────────────────────────────
-   6. SCROLL REVEAL
+   7. SCROLL REVEAL
 ──────────────────────────────────────── */
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
