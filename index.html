@@ -315,6 +315,10 @@ nav {
   border-color: var(--accent2);
   transform: rotate(20deg) scale(1.1);
 }
+.mode-toggle-btn .icon-sun { display:none; }
+.mode-toggle-btn .icon-moon { display:block; }
+[data-theme="light"] .mode-toggle-btn .icon-sun { display:block; }
+[data-theme="light"] .mode-toggle-btn .icon-moon { display:none; }
 
 .nav-cta {
   background: linear-gradient(135deg, var(--accent), var(--accent3));
@@ -527,6 +531,32 @@ nav {
 @keyframes beam-pulse {
   0%,100%{ opacity:1; border-top-color:rgba(80,200,255,.14); }
   50%    { opacity:.35; border-top-color:rgba(80,200,255,.05); }
+}
+
+/* UFO hint tooltip */
+.ufo-hint {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #eaf6ff;
+  background: rgba(10,20,40,0.85);
+  border: 1px solid rgba(120,200,255,0.45);
+  padding: .3rem .65rem;
+  border-radius: 50px;
+  box-shadow: 0 0 12px rgba(80,200,255,.35);
+  opacity: 0;
+  animation: ufo-hint-pulse 2.6s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
+}
+@keyframes ufo-hint-pulse {
+  0%,100% { opacity: 0; transform: translateX(-50%) translateY(2px); }
+  15%,85% { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ═══════════════════════════════════════════
@@ -761,7 +791,7 @@ section.alt { background:var(--bg2); }
 ═══════════════════════════════════════════ */
 .billboard-outer {
   position: relative;
-  display: inline-block;
+  display: block;
   max-width: 640px;
   width: 100%;
   margin: 0 auto 0;
@@ -780,32 +810,59 @@ section.alt { background:var(--bg2); }
   box-shadow: 0 0 20px rgba(0,212,255,.1), inset 0 0 30px rgba(0,212,255,.04);
 }
 
-/* ── New: poles + mountain SVG ── */
-.bb-poles-mtn-svg {
-  display: block;
+/* ── Poles connecting the board to the landscape below ── */
+.bb-poles-wrap {
+  position: relative;
   width: 100%;
   max-width: 640px;
+  height: 56px;
   margin: -2px auto 0;
-  flex-shrink: 0;
 }
-.bb-pole-fill {
-  fill: #666;
-  transition: fill 1.4s ease;
+.bb-pole {
+  position: absolute;
+  top: 0;
+  width: 16px;
+  height: 100%;
+  border-radius: 0 0 4px 4px;
+  background: #666;
+  transition: background 1.4s ease;
 }
-[data-theme="light"] .bb-pole-fill { fill: #999; }
-.bb-mtn-fill {
+[data-theme="light"] .bb-pole { background: #999; }
+.bb-pole-l { left: 28.6%; transform: translateX(-50%); }
+.bb-pole-r { left: 71.4%; transform: translateX(-50%); }
+
+/* ── Full-bleed landscape (hill silhouette + grass) — always spans the
+   entire viewport width, on any device, with no seam between the ridge
+   and the ground beneath it ── */
+.bb-grass-section {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  margin-top: -2px;
+}
+.bb-grass-svg {
+  display: block;
+  width: 100%;
+  height: clamp(70px, 12vw, 140px);
+}
+.bb-grass-fill {
   fill: var(--land-mountain);
   transition: fill 1.4s ease;
 }
-/* Mountain body — continues below the SVG peaks */
 .bb-mtn-body {
   background: var(--land-mountain);
-  max-width: 640px;
-  margin: -1px auto 0;
-  padding: 1.8rem 2.5rem 2.5rem;
-  border-radius: 0 0 22px 22px;
-  transition: background 1.4s ease;
+  margin-top: -1px;
+  padding: 1.8rem 1.5rem 2.5rem;
   text-align: center;
+  transition: background 1.4s ease;
+}
+.bb-mtn-body > * {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
 }
 [data-theme="dark"] .bb-mtn-body p { color: rgba(190,235,205,0.9); }
 [data-theme="light"] .bb-mtn-body p { color: rgba(5,30,15,0.85); }
@@ -861,7 +918,6 @@ section.alt { background:var(--bg2); }
 }
 .skill-item:hover { transform:translateX(6px); border-color:rgba(74,158,255,.35); }
 .skill-head { display:flex; align-items:center; gap:.7rem; margin-bottom:.4rem; }
-.skill-icon { font-size:1.3rem; }
 .skill-name { font-size:.92rem; font-weight:700; }
 .skill-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
 .tech-cloud { display:flex; flex-wrap:wrap; gap:.55rem; margin-top:2rem; }
@@ -878,7 +934,6 @@ section.alt { background:var(--bg2); }
   background:var(--surface); border:1px solid var(--border);
   border-radius:12px; padding:1.1rem 1.3rem;
 }
-.cert-icon  { font-size:1.8rem; flex-shrink:0; }
 .cert-name  { font-size:.88rem; font-weight:700; margin-bottom:.15rem; }
 .cert-issuer { font-size:.75rem; color:var(--muted); }
 .cert-badge {
@@ -957,14 +1012,10 @@ section.alt { background:var(--bg2); }
 /* ═══════════════════════════════════════════
    CONTACT
 ═══════════════════════════════════════════ */
-/* Contact */
 .contact-box {
   max-width: 680px; margin: 0 auto; text-align: center;
   display: flex; flex-direction: column; align-items: center;
 }
-.contact-box > .billboard-outer,
-.contact-box > .bb-poles-mtn-svg,
-.contact-box > .bb-mtn-body { width:100%; max-width:640px; }
 .contact-box p { color:var(--muted); line-height:1.78; margin-bottom:2.4rem; }
 
 [data-theme="dark"] .bb-mtn-body .c-link {
@@ -994,7 +1045,6 @@ section.alt { background:var(--bg2); }
   transition:border-color .3s,background .3s,transform .3s;
 }
 .c-link:hover { border-color:var(--accent2); background:rgba(74,158,255,.05); transform:translateY(-3px); }
-.c-icon { font-size:1.05rem; }
 .response-note { font-size:.78rem; color:var(--muted); margin-top:1.4rem; letter-spacing:.05em; }
 .response-note span { color:var(--accent2); font-weight:600; }
 
@@ -1225,7 +1275,7 @@ footer {
 <div class="sun"></div>
 
 <!-- ─── UFO with Alien — z-index:500, passes in front of hero title ─── -->
-<div class="ufo-wrap" id="ufoWrap" title="🛸 Click to hire me — $120 Website Package" onclick="window.open('https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share&tier=1','_blank')" role="button" tabindex="0">
+<div class="ufo-wrap" id="ufoWrap" title="Click for a surprise" onclick="window.open('https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share&tier=1','_blank')" role="button" tabindex="0">
   <div class="ufo-dome">
     <svg class="alien-svg" viewBox="0 0 44 36" xmlns="http://www.w3.org/2000/svg">
       <line x1="15" y1="4"  x2="11" y2="12" stroke="#55dd55" stroke-width="1.3" stroke-linecap="round"/>
@@ -1248,6 +1298,7 @@ footer {
     </div>
   </div>
   <div class="ufo-beam"></div>
+  <div class="ufo-hint">Click him for a surprise</div>
 </div>
 
 <!-- ─── NAVBAR ─── -->
@@ -1265,7 +1316,22 @@ footer {
   </ul>
   <div class="nav-right">
     <button class="mode-toggle-btn" id="modeToggle" aria-label="Toggle day/night mode">
-      <span id="modeIcon">🌙</span>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="var(--accent2)" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4.2" stroke="var(--accent)" stroke-width="1.6"/>
+        <g stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round">
+          <line x1="12" y1="2.5" x2="12" y2="4.8"/>
+          <line x1="12" y1="19.2" x2="12" y2="21.5"/>
+          <line x1="2.5" y1="12" x2="4.8" y2="12"/>
+          <line x1="19.2" y1="12" x2="21.5" y2="12"/>
+          <line x1="4.9" y1="4.9" x2="6.5" y2="6.5"/>
+          <line x1="17.5" y1="17.5" x2="19.1" y2="19.1"/>
+          <line x1="4.9" y1="19.1" x2="6.5" y2="17.5"/>
+          <line x1="17.5" y1="6.5" x2="19.1" y2="4.9"/>
+        </g>
+      </svg>
     </button>
     <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank" class="nav-cta">Hire Me on Upwork</a>
   </div>
@@ -1389,19 +1455,19 @@ footer {
       <div>
         <div class="skill-list">
           <div class="skill-item reveal">
-            <div class="skill-head"><span class="skill-icon">💻</span><span class="skill-name">Front-End Development</span></div>
+            <div class="skill-head"><span class="skill-name">Front-End Development</span></div>
             <p class="skill-desc">Pixel-perfect, responsive websites built with React, JavaScript, HTML5 &amp; CSS3. Figma/XD/PSD to code. Cross-browser compatible, performance-optimized.</p>
           </div>
           <div class="skill-item reveal">
-            <div class="skill-head"><span class="skill-icon">⚙️</span><span class="skill-name">IT Systems & Automation</span></div>
+            <div class="skill-head"><span class="skill-name">IT Systems & Automation</span></div>
             <p class="skill-desc">Microsoft 365 architecture, Power Automate workflows, Teams routing and dispatch hubs. I eliminate manual tasks and build proactive automated ecosystems.</p>
           </div>
           <div class="skill-item reveal">
-            <div class="skill-head"><span class="skill-icon">🔄</span><span class="skill-name">HubSpot CRM Optimization</span></div>
+            <div class="skill-head"><span class="skill-name">HubSpot CRM Optimization</span></div>
             <p class="skill-desc">Custom HubSpot environments ensuring pristine data flow from lead capture to close. Complex integration debugging (Sakari SMS, Call Tracking Metrics).</p>
           </div>
           <div class="skill-item reveal">
-            <div class="skill-head"><span class="skill-icon">📈</span><span class="skill-name">Meta Ads Management</span></div>
+            <div class="skill-head"><span class="skill-name">Meta Ads Management</span></div>
             <p class="skill-desc">Strategically managed $200K+ annual ad budgets. High-quality lead generation, CPA optimization, and clear measurable ROI. Meta Certified (2025–2027).</p>
           </div>
         </div>
@@ -1432,7 +1498,6 @@ footer {
           <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:.5rem;">Credentials</h3>
           <div class="cert-list">
             <div class="cert-card">
-              <span class="cert-icon">🏅</span>
               <div>
                 <div class="cert-name">Meta Certified Digital Marketing Associate</div>
                 <div class="cert-issuer">Meta · Issued Oct 2025 · Expires Oct 2027</div>
@@ -1440,7 +1505,6 @@ footer {
               <span class="cert-badge">Active</span>
             </div>
             <div class="cert-card">
-              <span class="cert-icon">🖥️</span>
               <div>
                 <div class="cert-name">Microsoft 365</div>
                 <div class="cert-issuer">INFOTEP · Issued Nov 2019</div>
@@ -1448,7 +1512,6 @@ footer {
               <span class="cert-badge">Certified</span>
             </div>
             <div class="cert-card">
-              <span class="cert-icon">🗣️</span>
               <div>
                 <div class="cert-name">English Language Certificate</div>
                 <div class="cert-issuer">Dominico Americano Language School · 2020–2022</div>
@@ -1561,31 +1624,32 @@ footer {
         </div>
       </div>
 
-      <!-- Two thick poles + mountain peak SVG connecting board to mountain body -->
-      <svg class="bb-poles-mtn-svg" viewBox="0 0 640 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Left pole -->
-        <rect class="bb-pole-fill" x="175" y="0" width="16" height="72" rx="4"/>
-        <!-- Right pole -->
-        <rect class="bb-pole-fill" x="449" y="0" width="16" height="72" rx="4"/>
-        <!-- Mountain peaks shape — merges into the body below -->
-        <path class="bb-mtn-fill" d="M0,110 L0,90 L100,110 L180,60 L230,95 L280,50 L320,78 L360,50 L410,95 L460,60 L540,110 L620,88 L640,95 L640,110 Z"/>
-      </svg>
+      <!-- Two poles connecting the board to the landscape below -->
+      <div class="bb-poles-wrap">
+        <span class="bb-pole bb-pole-l"></span>
+        <span class="bb-pole bb-pole-r"></span>
+      </div>
+    </div>
 
-      <!-- Mountain body (contains the text) -->
+    <!-- Full-bleed landscape: always spans the entire viewport width, on
+         any device, with the ridge and ground rendered as one continuous shape -->
+    <div class="bb-grass-section">
+      <svg class="bb-grass-svg" viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="bb-grass-fill" points="0,100 74,88 148,68 213,42 279,20 344,6 410,0 521,0 645,0 720,0 794,0 917,0 1029,0 1095,6 1160,20 1226,42 1292,68 1366,88 1440,100 1440,140 0,140"/>
+      </svg>
       <div class="bb-mtn-body">
         <p>Are your internal systems slowing you down? Need a clean, fast, and responsive website? I bring together front-end development, IT systems architecture, and digital marketing to give you real, measurable results. Let's talk.</p>
         <div class="contact-links" style="margin-top:1.5rem;">
           <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank" class="c-link">
-            <span class="c-icon">💼</span> Hire me on Upwork
+            Hire me on Upwork
           </a>
           <a href="https://www.upwork.com/services/product/development-it-front-end-development-of-your-website-front-end-developer-2026415887911693072?ref=project_share" target="_blank" class="c-link">
-            <span class="c-icon">🛒</span> Order a Website
+            Order a Website
           </a>
         </div>
         <a href="https://www.upwork.com/freelancers/~018cfb78c5e0501679" target="_blank" class="btn-primary" style="display:inline-block;margin-top:1.2rem;">Send Me a Message →</a>
-        <p class="response-note" style="margin-top:1.2rem;">⚡ Average response time: <span>under 4 hours</span> · Bilingual: <span>English & Spanish</span></p>
+        <p class="response-note" style="margin-top:1.2rem;">Average response time: <span>under 4 hours</span> · Bilingual: <span>English & Spanish</span></p>
       </div>
-
     </div>
   </div>
 </section>
@@ -1606,12 +1670,10 @@ footer {
 ──────────────────────────────────────── */
 const html           = document.documentElement;
 const modeToggle     = document.getElementById('modeToggle');
-const modeIcon       = document.getElementById('modeIcon');
 const navModeText    = document.getElementById('navModeText');
 const heroNameEl     = document.getElementById('heroName');
 const ORIGINAL_TEXT  = 'Jay Freelancer Services';
 
-/* ⚠️ FIX: Variables del OVNI movidas al inicio para evitar el ReferenceError (TDZ) */
 const ufoWrap        = document.getElementById('ufoWrap');
 let ufoTimeout       = null;
 let ufoRunning       = false;
@@ -1703,38 +1765,101 @@ function buildBillboardBulbs() {
 window.addEventListener('load', buildBillboardBulbs);
 
 /* ────────────────────────────────────────
-   3. DAY / NIGHT THEME
+   2b. TERRAIN ALIGNMENT — the poles live inside a fixed-width
+   (max 640px) centered box, while the landscape is full-bleed
+   (100vw). Those are two different coordinate systems, so instead
+   of guessing fixed percentages, we measure exactly where the poles
+   land on screen and rebuild the mountain silhouette so its two
+   peaks always sit precisely under them — at any viewport width.
 ──────────────────────────────────────── */
-function getAutoTheme() {
-  const h = new Date().getHours();
-  return (h >= 6 && h < 18) ? 'light' : 'dark';
+const grassSvg   = document.querySelector('.bb-grass-svg');
+const grassFill  = document.querySelector('.bb-grass-fill');
+const poleLEl    = document.querySelector('.bb-pole-l');
+const poleREl    = document.querySelector('.bb-pole-r');
+
+function buildTerrainPoints(peak1, peak2) {
+  /* One smooth, continuous mound: rises from the low ground on the left,
+     stays elevated (near the top edge) across the whole span between the
+     two poles — instead of dipping between two separate spikes — then
+     eases back down to low ground on the right. This makes the billboard
+     read as sitting on one natural hill rather than two disconnected points. */
+  const leftFracs  = [0, .18, .36, .52, .68, .84, 1];
+  const leftY      = [100, 88, 68, 42, 20, 6, 0];
+
+  const midFracs   = [.18, .38, .5, .62, .82];
+  const midY       = [0, 0, 0, 0, 0];
+
+  const rightFracs = [0, .16, .32, .48, .64, .82, 1];
+  const rightY     = [0, 6, 20, 42, 68, 88, 100];
+
+  const leftX  = leftFracs.map(f => Math.round(f * peak1));
+  const midX   = midFracs.map(f => Math.round(peak1 + f * (peak2 - peak1)));
+  const rightX = rightFracs.map(f => Math.round(peak2 + f * (1440 - peak2)));
+
+  const allX = [...leftX, ...midX, ...rightX];
+  const allY = [...leftY, ...midY, ...rightY];
+
+  let pts = allX.map((x, i) => `${x},${allY[i]}`).join(' ');
+  pts += ' 1440,140 0,140';
+  return pts;
 }
 
-let ufoAllowedNextToggle = false; 
+function updateTerrain() {
+  if (!grassSvg || !grassFill || !poleLEl || !poleREl) return;
+  const svgRect = grassSvg.getBoundingClientRect();
+  const width   = svgRect.width || window.innerWidth;
+  if (width <= 0) return;
+
+  const lRect = poleLEl.getBoundingClientRect();
+  const rRect = poleREl.getBoundingClientRect();
+  const lCenterFrac = ((lRect.left + lRect.width / 2) - svgRect.left) / width;
+  const rCenterFrac = ((rRect.left + rRect.width / 2) - svgRect.left) / width;
+
+  let peak1 = Math.max(30, Math.min(1410, lCenterFrac * 1440));
+  let peak2 = Math.max(peak1 + 120, Math.min(1410, rCenterFrac * 1440));
+
+  grassFill.setAttribute('points', buildTerrainPoints(peak1, peak2));
+}
+
+let terrainResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(terrainResizeTimer);
+  terrainResizeTimer = setTimeout(updateTerrain, 80);
+});
+window.addEventListener('load', () => {
+  updateTerrain();
+  requestAnimationFrame(updateTerrain);
+});
+document.addEventListener('DOMContentLoaded', updateTerrain);
+
+/* ────────────────────────────────────────
+   3. DAY / NIGHT THEME
+   Always starts in NIGHT mode. The visitor
+   can switch to day mode manually with the toggle.
+──────────────────────────────────────── */
+let ufoAllowedNextToggle = false;
 
 function applyTheme(theme, isManualToggle) {
   html.setAttribute('data-theme', theme);
 
   if (theme === 'dark') {
-    modeIcon.textContent  = '☀️'; 
     if (navModeText) navModeText.textContent = 'Night Mode';
     if (isManualToggle || ufoAllowedNextToggle) {
       ufoAllowedNextToggle = false;
       scheduleUFOForDark();
     }
   } else {
-    modeIcon.textContent  = '🌙'; 
     if (navModeText) navModeText.textContent = 'Day Mode';
-    ufoAllowedNextToggle = true; 
+    ufoAllowedNextToggle = true;
     resetUFO();
   }
   initNeonName();
   initNavLogoSweep();
 }
 
-// Auto-detect on load
-applyTheme(getAutoTheme(), false);
-ufoAllowedNextToggle = true; 
+// Always start in night (dark) mode — no time-of-day detection
+ufoAllowedNextToggle = true;
+applyTheme('dark', false);
 
 // Manual override
 modeToggle.addEventListener('click', () => {
@@ -1903,7 +2028,7 @@ function ufoLeave() {
     ufoWrap.className = 'ufo-wrap';
     ufoWrap.style.opacity = '0';
     ufoRunning = false;
-    ufoAllowedNextToggle = true; 
+    ufoAllowedNextToggle = true;
   }, { once: true });
 }
 
